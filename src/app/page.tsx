@@ -1,12 +1,24 @@
 // app/page.tsx
-import {headers} from 'next/headers';
 import LandingPage from '../components/LandingPage';
-import {getDomainConfig} from '@/utils/domains';
 
-export default async function Home() {
-  const headersList = await headers();
-  const host = headersList.get('host') || 'nullptr.party';
-  const config = getDomainConfig(host);
+interface SiteConfig {
+  domain: string;
+  telegramLink?: string;
+}
+
+const siteConfigs: Record<string, SiteConfig> = {
+  'nullptr.party': {
+    domain: 'nullptr.party',
+  },
+  'almaty.nullptr.party': {
+    domain: 'almaty.nullptr.party',
+    telegramLink: 'https://t.me/+PBPAEVveNuc5YmEy',
+  },
+};
+
+export default function Home() {
+  const domain = process.env.SITE_DOMAIN as string;
+  const config = siteConfigs[domain];
 
   return <LandingPage {...config} />;
 }
