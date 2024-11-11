@@ -7,35 +7,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-nullptr:
+  deploy:
     runs-on: ubuntu-latest
-    name: Deploy nullptr.party
-    steps:
-      - uses: actions/checkout@v4
+    name: Deploy ${{ matrix.site.domain }}
+    strategy:
+      matrix:
+        site:
+          - domain: nullptr.party
+            project: nullptr-party
+          - domain: almaty.nullptr.party
+            project: nullptr-party-almaty
+      # In case one deployment fails, continue with others
+      fail-fast: false
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install Dependencies
-        run: bun install
-
-      - name: Build
-        run: bun run build
-        env:
-          SITE_DOMAIN: nullptr.party
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy out --project-name=nullptr-party
-
-  deploy-almaty:
-    runs-on: ubuntu-latest
-    name: Deploy almaty.nullptr.party
     steps:
       - uses: actions/checkout@v4
 
@@ -50,11 +34,11 @@ jobs:
       - name: Build
         run: bun run build
         env:
-          SITE_DOMAIN: almaty.nullptr.party
+          SITE_DOMAIN: ${{ matrix.site.domain }}
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy out --project-name=almaty-nullptr-party
+          command: pages deploy out --project-name=${{ matrix.site.project }}
