@@ -1,23 +1,27 @@
 // app/layout.tsx
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Press_Start_2P, Inter } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const pressStart2P = Press_Start_2P({
+  weight: '400',
+  subsets: ['latin', 'cyrillic'],
+  variable: '--font-press-start',
+});
 
-export const metadata: Metadata = {
-  title: 'nullptr.party - Developer Community',
-  description: 'An international developer community, coming soon.',
-};
+const inter = Inter({
+  subsets: ['latin', 'cyrillic'],
+  variable: '--font-inter',
+});
 
 export default function RootLayout({
-                                     children,
-                                   }: {
+  children,
+}: {
   children: React.ReactNode;
 }) {
   return (
     <html lang="en">
-    <body className={inter.className}>{children}</body>
+      <body className={`${pressStart2P.variable} ${inter.variable}`}>{children}</body>
     </html>
   );
 }
