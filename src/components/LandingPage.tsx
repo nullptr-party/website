@@ -21,28 +21,28 @@ const PixelLandingPage: FC<LandingPageProps> = ({domain, telegramLink}) => {
       />
 
       {/* Main Content */}
-      <div className="max-w-2xl w-full text-center font-mono relative z-10 space-y-4">
+      <div className="max-w-2xl w-full text-center relative z-10 space-y-4">
         {/* Offline Badge */}
         <div className="flex justify-center mb-6">
-          <div className="bg-yellow-400 px-2 py-0.5 text-black text-sm">
+          <div className="bg-yellow-400 px-3 py-1 text-black text-sm pixel-perfect">
             OFFLINE
           </div>
         </div>
 
         {/* Domain Name */}
-        <h1 className="text-5xl font-bold text-white tracking-wider">
+        <h1 className="text-4xl font-bold text-white tracking-wider pixel-perfect leading-relaxed">
           {domain.toUpperCase()}
         </h1>
 
         {/* Separator Line */}
         <div className="flex items-center justify-center my-8 space-x-2">
-          <div className="w-2 h-2 bg-yellow-400"/>
-          <div className="h-px bg-yellow-400 w-96"/>
-          <div className="w-2 h-2 bg-yellow-400"/>
+          <div className="w-2 h-2 bg-yellow-400" />
+          <div className="h-px bg-yellow-400 w-96" />
+          <div className="w-2 h-2 bg-yellow-400" />
         </div>
 
         {/* Loading Text */}
-        <p className="text-yellow-400 text-sm opacity-80 animate-ping">
+        <p className="text-yellow-400 text-xl opacity-80 animate-ping pixel-perfect">
           Loading next event...
         </p>
 
@@ -51,7 +51,7 @@ const PixelLandingPage: FC<LandingPageProps> = ({domain, telegramLink}) => {
           <div className="mt-8">
             <a
               href={telegramLink}
-              className="hidden" // Hidden as per reference design
+              className="hidden"
               target="_blank"
               rel="noopener noreferrer"
             >
