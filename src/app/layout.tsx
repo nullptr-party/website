@@ -1,5 +1,4 @@
 // app/layout.tsx
-import type { Metadata } from 'next';
 import { Press_Start_2P, Inter } from 'next/font/google';
 import './globals.css';
 
