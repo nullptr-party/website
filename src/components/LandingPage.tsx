@@ -1,50 +1,67 @@
-// components/LandingPage.tsx
-import {FC} from 'react';
+import React, {FC} from 'react';
 
 interface LandingPageProps {
   domain: string;
   telegramLink?: string;
 }
 
-export const LandingPage: FC<LandingPageProps> = ({domain, telegramLink}) => {
+const PixelLandingPage: FC<LandingPageProps> = ({domain, telegramLink}) => {
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-4 animate-fade-in">
-      <div className="max-w-2xl w-full space-y-8 text-center">
-        <div className="space-y-4">
-          <h1
-            className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
-            {domain}
-          </h1>
+    <div className="min-h-screen bg-[#2E2E2E] flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      {/* Background Grid - More subtle */}
+      <div
+        className="absolute inset-0 w-full h-full opacity-5"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgb(75, 75, 75) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(75, 75, 75) 1px, transparent 1px)
+          `,
+          backgroundSize: '40px 40px',
+        }}
+      />
 
-          <div className="h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent my-8"/>
-
-          <p className="text-gray-400 text-lg md:text-xl animate-pulse">
-            Something is emerging from the void...
-          </p>
-
-
-          {telegramLink && (
-            <div className="mt-8 animate-bounce">
-              <a
-                href={telegramLink}
-                className="inline-block px-6 py-3 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors duration-300"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Join our Telegram
-              </a>
-            </div>
-          )}
+      {/* Main Content */}
+      <div className="max-w-2xl w-full text-center font-mono relative z-10 space-y-4">
+        {/* Offline Badge */}
+        <div className="flex justify-center mb-6">
+          <div className="bg-yellow-400 px-2 py-0.5 text-black text-sm">
+            OFFLINE
+          </div>
         </div>
 
-        <div className="absolute bottom-4 left-0 right-0 text-center">
-          <p className="text-gray-600 text-sm">
-            © {new Date().getFullYear()} nullptr.party
-          </p>
+        {/* Domain Name */}
+        <h1 className="text-5xl font-bold text-white tracking-wider">
+          {domain.toUpperCase()}
+        </h1>
+
+        {/* Separator Line */}
+        <div className="flex items-center justify-center my-8 space-x-2">
+          <div className="w-2 h-2 bg-yellow-400"/>
+          <div className="h-px bg-yellow-400 w-96"/>
+          <div className="w-2 h-2 bg-yellow-400"/>
         </div>
+
+        {/* Loading Text */}
+        <p className="text-yellow-400 text-sm opacity-80 animate-ping">
+          Loading next event...
+        </p>
+
+        {/* Telegram Button - Only if link exists */}
+        {telegramLink && (
+          <div className="mt-8">
+            <a
+              href={telegramLink}
+              className="hidden" // Hidden as per reference design
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              JOIN TELEGRAM
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default LandingPage;
+export default PixelLandingPage;
