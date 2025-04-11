@@ -41,17 +41,12 @@ const PixelLandingPage: FC<LandingPageProps> = ({domain, telegramLink}) => {
           <div className="w-2 h-2 bg-yellow-400" />
         </div>
 
-        {/* Loading Text */}
-        <p className="text-yellow-400 text-xl opacity-80 animate-ping pixel-perfect">
-          Loading next event...
-        </p>
-
         {/* Telegram Button - Only if link exists */}
         {telegramLink && (
           <div className="mt-8">
             <a
               href={telegramLink}
-              className="hidden"
+              className="inline-block bg-yellow-400 px-4 py-2 text-black text-lg pixel-perfect uppercase tracking-wider hover:bg-yellow-500 active:bg-yellow-600"
               target="_blank"
               rel="noopener noreferrer"
             >
