@@ -12,7 +12,7 @@ const siteConfigs: Record<string, SiteConfig> = {
   },
   'almaty.nullptr.party': {
     domain: 'almaty.nullptr.party',
-    telegramLink: 'https://t.me/+PBPAEVveNuc5YmEy',
+    telegramLink: 'https://t.me/almaty_nullptr_party',
   },
 };
 
