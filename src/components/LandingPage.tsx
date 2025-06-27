@@ -1,11 +1,17 @@
 import React, {FC} from 'react';
 
+interface CityTelegramLink {
+  cityName: string;
+  link: string;
+}
+
 interface LandingPageProps {
   domain: string;
   telegramLink?: string;
+  cityTelegramLinks?: CityTelegramLink[];
 }
 
-const PixelLandingPage: FC<LandingPageProps> = ({domain, telegramLink}) => {
+const PixelLandingPage: FC<LandingPageProps> = ({domain, telegramLink, cityTelegramLinks}) => {
   return (
     <div className="min-h-screen bg-[#2E2E2E] flex flex-col items-center justify-center p-4 relative overflow-hidden">
       {/* Background Grid - More subtle */}
@@ -41,7 +47,7 @@ const PixelLandingPage: FC<LandingPageProps> = ({domain, telegramLink}) => {
           <div className="w-2 h-2 bg-yellow-400" />
         </div>
 
-        {/* Telegram Button - Only if link exists */}
+        {/* Telegram Button for specific subdomains */}
         {telegramLink && (
           <div className="mt-8">
             <a
@@ -52,6 +58,24 @@ const PixelLandingPage: FC<LandingPageProps> = ({domain, telegramLink}) => {
             >
               JOIN TELEGRAM
             </a>
+          </div>
+        )}
+
+        {/* City-specific Telegram Buttons for the main domain */}
+        {cityTelegramLinks && cityTelegramLinks.length > 0 && !telegramLink && (
+          <div className="mt-8 space-y-4">
+            {cityTelegramLinks.map((cityLink) => (
+              <div key={cityLink.cityName}>
+                <a
+                  href={cityLink.link}
+                  className="inline-block bg-yellow-400 px-4 py-2 text-black text-lg pixel-perfect uppercase tracking-wider hover:bg-yellow-500 active:bg-yellow-600"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  JOIN {cityLink.cityName.toUpperCase()} TELEGRAM
+                </a>
+              </div>
+            ))}
           </div>
         )}
       </div>
