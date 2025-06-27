@@ -16,12 +16,12 @@ const siteConfigs: Record<string, SiteConfig> = {
   'nullptr.party': {
     domain: 'nullptr.party',
     cityTelegramLinks: [
-      { cityName: 'Almaty', link: 'https://t.me/almaty_nullptr_party' },
+      { cityName: 'Almaty', link: 'https://t.me/+zLZxnQgWCOtjMzg6' },
     ],
   },
   'almaty.nullptr.party': {
     domain: 'almaty.nullptr.party',
-    telegramLink: 'https://t.me/almaty_nullptr_party',
+    telegramLink: 'https://t.me/+zLZxnQgWCOtjMzg6',
   },
 };
 

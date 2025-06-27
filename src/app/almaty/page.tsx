@@ -5,7 +5,7 @@ export default function Almaty() {
   return (
     <LandingPage
       domain="almaty.nullptr.party"
-      telegramLink="https://t.me/+PBPAEVveNuc5YmEy"
+      telegramLink="https://t.me/+zLZxnQgWCOtjMzg6"
     />
   );
 }
