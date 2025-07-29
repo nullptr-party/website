@@ -1,27 +1,23 @@
 // app/page.tsx
 import LandingPage from '../components/LandingPage';
 
-interface CityTelegramLink {
-  cityName: string;
-  link: string;
-}
-
 interface SiteConfig {
   domain: string;
   telegramLink?: string;
-  cityTelegramLinks?: CityTelegramLink[];
+  cityLinks?: Array<{name: string; link: string}>;
 }
 
 const siteConfigs: Record<string, SiteConfig> = {
   'nullptr.party': {
     domain: 'nullptr.party',
-    cityTelegramLinks: [
-      { cityName: 'Almaty', link: 'https://t.me/+zLZxnQgWCOtjMzg6' },
+    telegramLink: 'https://t.me/+1-aB-cGCv4pkMDAy',
+    cityLinks: [
+      {name: 'Almaty', link: 'https://t.me/+YgE_vglZYnkxMWVi'}
     ],
   },
   'almaty.nullptr.party': {
     domain: 'almaty.nullptr.party',
-    telegramLink: 'https://t.me/+zLZxnQgWCOtjMzg6',
+    telegramLink: 'https://t.me/almaty_nullptr_party',
   },
 };
 

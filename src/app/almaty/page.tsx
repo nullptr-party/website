@@ -1,11 +1,6 @@
 // app/almaty/page.tsx
-import LandingPage from '@/components/LandingPage';
+import { redirect } from 'next/navigation';
 
 export default function Almaty() {
-  return (
-    <LandingPage
-      domain="almaty.nullptr.party"
-      telegramLink="https://t.me/+zLZxnQgWCOtjMzg6"
-    />
-  );
+  redirect('https://nullptr.party');
 }
