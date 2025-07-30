@@ -9,16 +9,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    name: Deploy ${{ matrix.site.domain }}
-    strategy:
-      matrix:
-        site:
-          - domain: nullptr.party
-            project: nullptr-party
-          - domain: almaty.nullptr.party
-            project: nullptr-party-almaty
-      # In case one deployment fails, continue with others
-      fail-fast: false
+    name: Deploy to nullptr.party
 
     steps:
       - uses: actions/checkout@v4
@@ -33,12 +24,10 @@ jobs:
 
       - name: Build
         run: bun run build
-        env:
-          SITE_DOMAIN: ${{ matrix.site.domain }}
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy out --project-name=${{ matrix.site.project }} --branch main
+          command: pages deploy out --project-name=nullptr-party --branch main

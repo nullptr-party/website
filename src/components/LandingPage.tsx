@@ -2,11 +2,11 @@ import React, { FC } from "react";
 
 interface LandingPageProps {
   domain: string;
-  telegramLink?: string;
+  telegramChannelLink?: string;
   cityLinks?: Array<{ name: string; link: string }>;
 }
 
-const LandingPage: FC<LandingPageProps> = ({ domain, telegramLink, cityLinks }) => {
+const LandingPage: FC<LandingPageProps> = ({ domain, telegramChannelLink, cityLinks }) => {
   return (
     <div className="min-h-screen bg-[#232323] flex flex-col items-center justify-center px-3 sm:px-8 py-4 relative overflow-hidden">
       {/* Pixel grid background */}
@@ -44,9 +44,9 @@ const LandingPage: FC<LandingPageProps> = ({ domain, telegramLink, cityLinks }) 
         </div>
 
         {/* Telegram channel button */}
-        {telegramLink && (
+        {telegramChannelLink && (
           <a
-            href={telegramLink}
+            href={telegramChannelLink}
             target="_blank"
             rel="noopener noreferrer"
             className="
