@@ -63,7 +63,7 @@ export default function NullpointerTalks2Page() {
 
       <div className="max-w-3xl w-full mx-auto relative z-10 px-6 sm:px-10 py-12 sm:py-16 flex-1">
         {/* Event Title */}
-        <h1 className="font-[var(--font-press-start)] text-white text-base xs:text-xl sm:text-4xl md:text-5xl leading-tight tracking-tight mb-3 break-all">
+        <h1 className="font-[var(--font-press-start)] text-white text-base xs:text-xl sm:text-3xl md:text-4xl leading-tight tracking-tight mb-3 break-all">
           nullptr.talks<span className="text-yellow-400">[</span>2<span className="text-yellow-400">]</span>
         </h1>
 
