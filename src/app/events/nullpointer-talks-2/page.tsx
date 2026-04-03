@@ -13,7 +13,7 @@ const partners: Array<{
   { name: 'Макс (добрый)', link: 'https://t.me/mgorbatyuk_dev', logo: '/partners/max-dobry.jpg' },
   { name: 'Mobile Dev KZ', link: 'https://t.me/mobile_dev_kz', logo: '/partners/mobile-dev-kz.svg' },
   { name: 'per malī ad astra', link: 'https://t.me/maliastra', logo: '/partners/maliastra.jpg' },
-  { name: 'Pavel Korolev', link: 'https://t.me/pavelkorolevxyz_channel', logo: '/partners/pavel-korolev.jpg' },
+  { name: 'Pavel Korolev. Потяжелее', link: 'https://t.me/pavelkorolevxyz_channel', logo: '/partners/pavel-korolev.jpg' },
   { name: 'Android Hours', link: 'https://www.linkedin.com/in/amangeldy/', logo: '/partners/android-hours.png' },
 ];
 
