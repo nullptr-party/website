@@ -4,20 +4,22 @@ const partners: Array<{
   logo: string;
   invert?: boolean;
   scale?: string;
+  textSize?: string;
 }> = [
   { name: 'MOST', link: 'https://t.me/moststartupchannel', logo: '/partners/most.svg', scale: '85%' },
-  { name: 'Almaty Java Community', link: 'https://t.me/AlmatyJavaCommunity', logo: '/partners/almaty-java.jpg' },
+  { name: 'Almaty Java Community', link: 'https://t.me/AlmatyJavaCommunity', logo: '/partners/almaty-java.jpg', textSize: 'text-base sm:text-lg' },
   { name: 'Bereke Bank', link: 'https://t.me/+28iZdN5jgzBiZWM6', logo: '/partners/bereke-bank.svg' },
   { name: 'KZ IT Events', link: 'https://t.me/kz_it_events', logo: '/partners/kz-it-events.jpg' },
   { name: 'Макс (добрый)', link: 'https://t.me/mgorbatyuk_dev', logo: '/partners/max-dobry.jpg' },
   { name: 'Mobile Dev KZ', link: 'https://t.me/mobile_dev_kz', logo: '/partners/mobile-dev-kz.svg' },
   { name: 'per malī ad astra', link: 'https://t.me/maliastra', logo: '/partners/maliastra.jpg' },
+  { name: 'Pavel Korolev', link: 'https://t.me/pavelkorolevxyz_channel', logo: '/partners/pavel-korolev.jpg' },
   { name: 'Android Hours', link: 'https://www.linkedin.com/in/amangeldy/', logo: '/partners/android-hours.png' },
 ];
 
 function PartnerCard({ partner }: { partner: (typeof partners)[number] }) {
   const content = (
-    <div className="group flex flex-col items-center gap-3 p-4 sm:p-5 bg-[#3a3a3a] border border-[#4a4a4a] hover:border-yellow-400/60 transition-all duration-200 hover:bg-[#404040]">
+    <div className="group flex flex-col items-center gap-3 p-4 sm:p-5 bg-[#3a3a3a] border border-[#4a4a4a] hover:border-yellow-400/60 transition-all duration-200 hover:bg-[#404040] h-full">
       <div className="w-full aspect-square rounded-sm overflow-hidden bg-[#2a2a2a] flex items-center justify-center p-3">
         <img
           src={partner.logo}
@@ -30,7 +32,7 @@ function PartnerCard({ partner }: { partner: (typeof partners)[number] }) {
           }}
         />
       </div>
-      <span className="font-[var(--font-press-start)] text-[10px] sm:text-xs text-center text-white/90 group-hover:text-yellow-400 transition-colors leading-relaxed min-h-[3em] flex items-center">
+      <span className={`font-[var(--font-press-start)] ${partner.textSize ?? 'text-base sm:text-lg'} text-center text-white/90 group-hover:text-yellow-400 transition-colors leading-snug min-h-[2.5em] flex items-center justify-center`}>
         {partner.name}
       </span>
     </div>
@@ -110,9 +112,11 @@ export default function NullpointerTalks2Page() {
             Информационные партнёры
           </h2>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <div className="flex flex-wrap justify-center gap-4">
             {partners.map((partner) => (
-              <PartnerCard key={partner.name} partner={partner} />
+              <div key={partner.name} className="w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.75rem)]">
+                <PartnerCard partner={partner} />
+              </div>
             ))}
           </div>
         </section>
