@@ -1,0 +1,9 @@
+<svg width="320" height="320" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="320" fill="#28c9b7"/>
+  <!-- Phone outline -->
+  <rect x="120" y="70" width="80" height="140" rx="12" fill="none" stroke="#fff" stroke-width="6"/>
+  <circle cx="160" cy="192" r="6" fill="#fff"/>
+  <!-- Code brackets -->
+  <text x="100" y="270" text-anchor="middle" font-family="monospace" font-weight="700" font-size="36" fill="#fff">&lt;/&gt;</text>
+  <text x="220" y="270" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-weight="600" font-size="24" fill="#fff">KZ</text>
+</svg>
