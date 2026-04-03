@@ -6,7 +6,7 @@ const partners: Array<{
   scale?: string;
 }> = [
   { name: 'MOST', link: 'https://t.me/moststartupchannel', logo: '/partners/most.svg', scale: '85%' },
-  { name: 'Almaty Java', link: 'https://t.me/AlmatyJavaCommunity', logo: '/partners/almaty-java.jpg' },
+  { name: 'Almaty Java Community', link: 'https://t.me/AlmatyJavaCommunity', logo: '/partners/almaty-java.jpg' },
   { name: 'Bereke Bank', link: 'https://t.me/+28iZdN5jgzBiZWM6', logo: '/partners/bereke-bank.svg' },
   { name: 'KZ IT Events', link: 'https://t.me/kz_it_events', logo: '/partners/kz-it-events.jpg' },
   { name: 'Макс (добрый)', link: 'https://t.me/mgorbatyuk_dev', logo: '/partners/max-dobry.jpg' },
@@ -30,7 +30,7 @@ function PartnerCard({ partner }: { partner: (typeof partners)[number] }) {
           }}
         />
       </div>
-      <span className="font-[var(--font-press-start)] text-[10px] sm:text-xs text-center text-white/90 group-hover:text-yellow-400 transition-colors leading-relaxed">
+      <span className="font-[var(--font-press-start)] text-[10px] sm:text-xs text-center text-white/90 group-hover:text-yellow-400 transition-colors leading-relaxed min-h-[3em] flex items-center">
         {partner.name}
       </span>
     </div>
@@ -66,6 +66,28 @@ export default function NullpointerTalks2Page() {
         <h1 className="font-[var(--font-press-start)] text-white text-base xs:text-xl sm:text-4xl md:text-5xl leading-tight tracking-tight mb-3 break-all">
           nullptr.talks<span className="text-yellow-400">[</span>2<span className="text-yellow-400">]</span>
         </h1>
+
+        {/* Presented by */}
+        <a
+          href="https://nullptr.party"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block mb-8 group"
+        >
+          <span className="font-[var(--font-press-start)] text-white/30 text-[8px] sm:text-[10px] uppercase tracking-widest">
+            presented by
+          </span>
+          <div className="flex items-center gap-3 mt-2">
+            <img
+              src="/partners/nullptr-party.svg"
+              alt="nullptr.party"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-sm"
+            />
+            <span className="font-[var(--font-press-start)] text-yellow-400 text-sm sm:text-lg group-hover:text-white transition-colors">
+              nullptr.party
+            </span>
+          </div>
+        </a>
 
         {/* Date & Location */}
         <p className="font-[var(--font-press-start)] text-white/80 text-sm sm:text-base mb-2">
