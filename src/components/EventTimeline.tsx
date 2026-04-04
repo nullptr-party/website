@@ -37,7 +37,7 @@ function EventCard({ event, index }: { event: CommunityEvent; index: number }) {
   return (
     <div
       className="timeline-event opacity-0 translate-y-2"
-      style={{ transitionDelay: `${index * 40}ms` }}
+      style={{ transitionDelay: `${Math.min(index * 20, 80)}ms` }}
     >
       <div className="flex gap-3 sm:gap-4">
         {/* Timeline dot */}
@@ -200,7 +200,7 @@ export default function EventTimeline() {
           }
         });
       },
-      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0, rootMargin: '0px 0px 100px 0px' }
     );
 
     container.querySelectorAll('.timeline-event').forEach((el) => {
