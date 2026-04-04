@@ -98,10 +98,12 @@ export default function NullpointerTalks1Page() {
         {/* Hero */}
         <header className="mb-10 sm:mb-14">
           {/* Event poster */}
-          <div className="mb-6 sm:mb-8 overflow-hidden rounded-sm border border-[#FFD700]/20">
+          <div className="mb-6 sm:mb-8 overflow-hidden rounded-sm border border-[#FFD700]/20" style={{ aspectRatio: '1 / 1' }}>
             <img
               src="/events/talks-1.jpg"
               alt="nullptr.talks[1]"
+              width={1200}
+              height={1200}
               className="w-full h-auto"
             />
           </div>
