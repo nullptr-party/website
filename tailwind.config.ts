@@ -22,9 +22,15 @@ export default {
     },
     keyframes: {
       fadeIn: {
-        '0%': {opacity: '0'},
-        '100%': {opacity: '1'},
+        '0%': { opacity: '0' },
+        '100%': { opacity: '1' },
       },
+    },
+    transitionTimingFunction: {
+      'md-decelerate': 'cubic-bezier(0.2, 0, 0, 1)',
+    },
+    transitionDuration: {
+      'snap': '100ms',
     },
   },
   plugins: [],

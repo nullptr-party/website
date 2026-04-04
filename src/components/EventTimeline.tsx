@@ -36,7 +36,7 @@ function EventCard({ event, index }: { event: CommunityEvent; index: number }) {
 
   return (
     <div
-      className="timeline-event opacity-0 translate-y-2"
+      className="timeline-event opacity-0 translate-y-2 transition-[opacity,transform] duration-snap ease-md-decelerate"
       style={{ transitionDelay: `${Math.min(index * 20, 80)}ms` }}
     >
       <div className="flex gap-3 sm:gap-4">
@@ -171,7 +171,7 @@ function EventCard({ event, index }: { event: CommunityEvent; index: number }) {
 
 function YearMarker({ year }: { year: string }) {
   return (
-    <div className="timeline-event opacity-0 translate-y-2 flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+    <div className="timeline-event opacity-0 translate-y-2 transition-[opacity,transform] duration-snap ease-md-decelerate flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
       <div className="flex flex-col items-center flex-shrink-0 w-6 sm:w-8">
         <div className="w-2 h-2 bg-[#FFD700] rounded-full" />
       </div>
