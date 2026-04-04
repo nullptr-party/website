@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { CommunityEvent, events, venues, getEventsByYear } from '@/app/_data/events';
+import { imageDimensions } from '@/app/_data/imageDimensions';
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr + 'T00:00:00');
@@ -9,17 +10,21 @@ function formatDate(dateStr: string): string {
 }
 
 function EventImage({ src, alt, isTalks }: { src: string; alt: string; isTalks: boolean }) {
+  const dims = imageDimensions[src];
   return (
     <div
       className={`
         mb-2 overflow-hidden rounded-sm border
         ${isTalks ? 'border-[#FFD700]/20' : 'border-[#363636]'}
       `}
+      style={dims ? { aspectRatio: `${dims.w} / ${dims.h}` } : undefined}
     >
       <img
         src={src}
         alt={alt}
         loading="lazy"
+        width={dims?.w}
+        height={dims?.h}
         className="w-full h-auto"
       />
     </div>
