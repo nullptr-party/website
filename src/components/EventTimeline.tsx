@@ -44,7 +44,7 @@ function EventCard({ event, index }: { event: CommunityEvent; index: number }) {
         <div className="flex flex-col items-center flex-shrink-0 w-6 sm:w-8">
           <div
             className={`
-              w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-sm flex-shrink-0 mt-[5px]
+              w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm flex-shrink-0 mt-[3px]
               ${isTalks ? 'bg-[#FFD700] shadow-[0_0_8px_#FFD70066]' : 'bg-[#FFD700]/60'}
             `}
           />
@@ -62,7 +62,7 @@ function EventCard({ event, index }: { event: CommunityEvent; index: number }) {
           `}
         >
           {/* Header row */}
-          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1.5">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1.5">
             <span
               className={`
                 font-pixel text-[10px] sm:text-xs uppercase tracking-wide
