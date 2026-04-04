@@ -10,6 +10,7 @@ export default {
     extend: {
       fontFamily: {
         pixel: ['"Press Start 2P"', 'monospace'],
+        body: ['Inter', 'var(--font-inter)', 'system-ui', 'sans-serif'],
       },
       colors: {
         background: "var(--background)",

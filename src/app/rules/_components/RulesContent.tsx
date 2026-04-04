@@ -1,5 +1,5 @@
 // app/rules/_components/RulesContent.tsx
-import { RuleTranslations } from '../_data/translations';
+import { RuleTranslations } from '@/app/rules/_data/translations';
 import Link from 'next/link';
 
 interface RulesContentProps {

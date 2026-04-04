@@ -2,36 +2,36 @@
 
 import Link from 'next/link';
 
-const EVENT_DATE = '2026-04-03';
+const EVENT_DATE = '2025-09-12';
 
 const speakers = [
   {
+    name: 'Дмитрий Бузулуцкий',
+    role: 'iOS Tech Lead, Bereke Bank',
+    topic: 'Быть или не быть мобильным разработчиком в 2026 году?',
+    description: '2022 год показал: даже в IT перемены могут прийти внезапно. За 12 лет Дмитрий видел мобильную разработку со всех сторон — от первых приложений до управления командами. Как меняется профессия, куда движется рынок, и что нас ждёт впереди.',
+    video: 'https://www.youtube.com/watch?v=xEgcnV6LquU',
+  },
+  {
+    name: 'Илья Гуля',
+    role: 'Developer Productivity Engineer, inDrive',
+    topic: 'Вайбкодинг — блажь или благо?',
+    description: 'Нейросети, Cursor, Claude Code — всё обещает сделать жизнь разработчика легче, но так ли это? Реальные кейсы: когда доверять ИИ, а когда лучше положиться на собственный опыт.',
+    video: 'https://www.youtube.com/watch?v=1CFaLRVv76M',
+  },
+  {
     name: 'Дмитрий Михальченков',
     role: 'Senior Android Engineer, inDrive',
-    topic: 'Код-ревью: как перестать мучить команду',
-    description: 'Максимально холиварная тема, о которую разбили ЧСВ многих разрабов и которую боятся не меньше бизнесов.',
-    slides: '/events/slides/mikhalchenkov-code-review.pdf',
+    topic: 'Фича-тогглы: друг или враг вашего дедлайна?',
+    description: 'Фича-тогглы звучат как универсальное решение для гибких релизов, но на практике часто добавляют хаоса. Как их использовать во благо: что работает, что ломает процессы, и как не утонуть в техдолге.',
+    video: 'https://www.youtube.com/watch?v=rGr8va9WKxk',
   },
   {
-    name: 'Алексей Орехов',
-    role: 'Android Engineer, ДНЧВПСТиО',
-    topic: 'Почему в 2026 нужно уходить из энтерпрайза и нырять в ИИ',
-    description: 'Хайп? Выгорание? Расчётливый эпатаж для повышения продаж своих курсов? Приходите, узнаем вместе.',
-    slides: '/events/slides/orekhov-enterprise-to-ai.pdf',
-  },
-  {
-    name: 'Даурен Кассен',
-    role: 'Android/KMP-разработчик, QIC digital hub (Катар)',
-    topic: 'Compose Multiplatform — пет-проект который приносит денюжки',
-    description: 'Как использовать Kotlin не только для Android, но и для iOS и веба. Советы, антипримеры, подводные камни.',
-    slides: '/events/slides/kassen-compose-multiplatform.pdf',
-  },
-  {
-    name: 'Иван Луценко',
-    role: 'Android Tech Lead, Bereke Bank',
-    topic: 'Эволюция анализа крешей: от Crashlytics до мультиагентского пайплайна',
-    description: 'Gemini, Claude Desktop, собственный плагин для Claude Code с субагентами. Live-демо: агенты разбирают случайный креш.',
-    slides: 'https://ivan.nullptr.party/res/crashlytics-talk',
+    name: 'Данияр Амангельды',
+    role: 'Senior Android Developer',
+    topic: 'Android hours — тегін воркшоп. Қалай сонда?',
+    description: 'Почему я решил проводить бесплатные воркшопы по Android, какие бонусы и неожиданные открытия это принесло. Как обучение других меняет твой собственный взгляд на профессию.',
+    video: 'https://www.youtube.com/watch?v=zZag7ayvDow',
   },
 ];
 
@@ -83,7 +83,9 @@ function PartnerCard({ partner }: { partner: (typeof partners)[number] }) {
   return content;
 }
 
-export default function NullpointerTalks2Page() {
+export default function NullpointerTalks0Page() {
+  const isPast = new Date() > new Date(EVENT_DATE + 'T23:59:59');
+
   return (
     <div className="min-h-screen bg-[#232323] relative overflow-hidden flex flex-col">
       {/* Pixel grid background */}
@@ -105,15 +107,15 @@ export default function NullpointerTalks2Page() {
           {/* Event poster */}
           <div className="mb-6 sm:mb-8 overflow-hidden rounded-sm border border-[#FFD700]/20">
             <img
-              src="/events/talks-2.jpg"
-              alt="nullptr.talks[2]"
+              src="/events/talks-0.jpg"
+              alt="nullptr.talks[0]"
               className="w-full h-auto"
             />
           </div>
 
           {/* Title */}
           <h1 className="font-pixel text-white text-lg xs:text-xl sm:text-3xl md:text-4xl leading-tight tracking-tight mb-4">
-            nullptr.talks<span className="text-[#FFD700]">[</span>2<span className="text-[#FFD700]">]</span>
+            nullptr.talks<span className="text-[#FFD700]">[</span>0<span className="text-[#FFD700]">]</span>
           </h1>
 
           {/* Presented by */}
@@ -135,7 +137,7 @@ export default function NullpointerTalks2Page() {
           <div className="space-y-2 mb-6">
             <div className="flex items-center gap-3">
               <span className="font-pixel text-[9px] sm:text-[10px] text-[#666] uppercase w-14 sm:w-16 flex-shrink-0">Когда</span>
-              <span className="font-body text-sm sm:text-base text-white/90">3 апреля 2026, 19:00</span>
+              <span className="font-body text-sm sm:text-base text-white/90">12 сентября 2025, 19:00</span>
             </div>
             <div className="flex items-center gap-3">
               <span className="font-pixel text-[9px] sm:text-[10px] text-[#666] uppercase w-14 sm:w-16 flex-shrink-0">Где</span>
@@ -154,29 +156,33 @@ export default function NullpointerTalks2Page() {
             </div>
           </div>
 
-          {/* CTA buttons — only before/on event day */}
-          {new Date() <= new Date(EVENT_DATE + 'T23:59:59') ? (
+          {isPast ? (
+            <div className="flex flex-wrap gap-3">
+              <div className="font-pixel text-[10px] sm:text-xs text-[#666] uppercase tracking-wider border border-[#363636] px-4 py-2.5 inline-block">
+                Мероприятие завершено
+              </div>
+              <a
+                href="https://www.youtube.com/playlist?list=PL1rdjlpSaYF1Hz2docBwkHZ1IY_AkRqOn"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-pixel text-[10px] sm:text-xs uppercase bg-[#FFD700] text-[#232323] px-4 py-2.5 hover:bg-[#ffe066] transition-colors tracking-wider inline-flex items-center gap-2"
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg>
+                Смотреть записи
+              </a>
+            </div>
+          ) : (
             <div className="flex flex-col sm:flex-row gap-3">
               <a
-                href="https://forms.gle/yn8JrbU1Axij3j2R6"
+                href="https://forms.gle/CvsRbb89vtjd98PM7"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-pixel text-xs sm:text-sm uppercase bg-[#FFD700] text-[#232323] px-6 py-3 border-4 border-yellow-300 shadow-[4px_4px_0_#111] transition hover:scale-105 hover:shadow-[0_0_0_4px_#ffe066,0_0_12px_2px_#ffe066aa] active:bg-yellow-500 text-center"
               >
                 Регистрация
               </a>
-              <a
-                href="https://t.me/+qJ99IVcC_EY5NTRi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-pixel text-xs sm:text-sm uppercase bg-transparent text-white px-6 py-3 border-4 border-gray-400 shadow-[4px_4px_0_#1a1a1a] transition hover:bg-gray-700 text-center"
-              >
-                Чат мероприятия
-              </a>
-            </div>
-          ) : (
-            <div className="font-pixel text-[10px] sm:text-xs text-[#666] uppercase tracking-wider border border-[#363636] px-4 py-2.5 inline-block">
-              Мероприятие завершено
             </div>
           )}
         </header>
@@ -219,20 +225,17 @@ export default function NullpointerTalks2Page() {
                 <p className="font-body text-xs sm:text-sm text-[#999] leading-relaxed">
                   {speaker.description}
                 </p>
-                {speaker.slides && (
+                {speaker.video && (
                   <a
-                    href={speaker.slides}
+                    href={speaker.video}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 font-pixel text-[9px] sm:text-[10px] text-[#FFD700]/80 hover:text-[#FFD700] transition-colors mt-3 uppercase tracking-wider"
+                    className="inline-flex items-center gap-2 font-pixel text-[9px] sm:text-[10px] text-[#FFD700] bg-[#FFD700]/10 border border-[#FFD700]/30 hover:bg-[#FFD700]/20 transition-colors mt-3 px-3 py-1.5 uppercase tracking-wider"
                   >
-                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="2" y="3" width="20" height="14" rx="2" />
-                      <path d="M8 21h8" />
-                      <path d="M12 17v4" />
-                      <polygon points="10,8 10,14 15,11" fill="currentColor" stroke="none" />
+                    <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                     </svg>
-                    Презентация
+                    Смотреть запись
                   </a>
                 )}
               </div>

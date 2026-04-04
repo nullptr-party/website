@@ -1,5 +1,5 @@
 // app/page.tsx
-import LandingPage from '../components/LandingPage';
+import LandingPage from '@/components/LandingPage';
 
 const config = {
   domain: 'nullptr.party',
