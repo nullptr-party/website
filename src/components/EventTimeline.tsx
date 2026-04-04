@@ -44,8 +44,8 @@ function EventCard({ event, index }: { event: CommunityEvent; index: number }) {
         <div className="flex flex-col items-center flex-shrink-0 w-6 sm:w-8">
           <div
             className={`
-              w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-sm flex-shrink-0 mt-1
-              ${isTalks ? 'bg-[#FFD700] shadow-[0_0_8px_#FFD70066]' : 'bg-[#4a4a4a] border border-[#666]'}
+              w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-sm flex-shrink-0 mt-[5px]
+              ${isTalks ? 'bg-[#FFD700] shadow-[0_0_8px_#FFD70066]' : 'bg-[#FFD700]/60'}
             `}
           />
           <div className="w-px flex-1 bg-[#353535]" />
@@ -66,7 +66,7 @@ function EventCard({ event, index }: { event: CommunityEvent; index: number }) {
             <span
               className={`
                 font-pixel text-[10px] sm:text-xs uppercase tracking-wide
-                ${isTalks ? 'text-[#FFD700]' : 'text-[#888]'}
+                ${isTalks ? 'text-[#FFD700]' : 'text-[#FFD700]/80'}
               `}
             >
               {event.title}
