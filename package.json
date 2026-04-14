@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "next": "^16.1.6",
+    "photoswipe": "^5.4.4",
     "qrcode.react": "^4.2.0",
     "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106"
+    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react-photoswipe-gallery": "^4.0.0"
   },
   "devDependencies": {
     "@netlify/plugin-nextjs": "^5.12.0",
