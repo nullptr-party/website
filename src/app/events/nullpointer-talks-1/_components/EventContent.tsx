@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import type { GalleryPhoto } from '@/app/_lib/gallery';
 import { PhotoGallery } from '@/components/PhotoGallery';
+import { PhotoCredit } from '@/components/PhotoCredit';
 
 const EVENT_DATE = '2025-12-12';
 
@@ -103,17 +104,7 @@ export default function EventContent({ photos }: { photos: GalleryPhoto[] }) {
           {photos.length > 0 ? (
             <div className="mb-6 sm:mb-8">
               <PhotoGallery photos={photos} />
-              <p className="font-pixel text-[9px] sm:text-[10px] text-[#666] mt-3 text-right">
-                {photos.length} фото · фотограф{' '}
-                <a
-                  href="https://instagram.com/unikarinaa"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[#FFD700] transition-colors"
-                >
-                  @unikarinaa
-                </a>
-              </p>
+              <PhotoCredit name="Карина" instagram="unikarinaa" />
             </div>
           ) : (
             <div className="mb-6 sm:mb-8 overflow-hidden rounded-sm border border-[#FFD700]/20" style={{ aspectRatio: '1 / 1' }}>
