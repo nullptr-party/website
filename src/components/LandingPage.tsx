@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import EventTimeline from "./EventTimeline";
+import { TalksQuickNav } from "./TalksQuickNav";
 
 interface LandingPageProps {
   domain: string;
@@ -101,6 +102,9 @@ const LandingPage: FC<LandingPageProps> = ({ domain, telegramChannelLink, cityLi
           ))}
         </div>
       </header>
+
+      {/* Quick-access to nullptr.talks events */}
+      <TalksQuickNav />
 
       {/* Events timeline */}
       <main className="relative z-10 w-full">
