@@ -85,7 +85,7 @@ function GalleryInner({ photos }: { photos: GalleryPhoto[] }) {
                   aria-label={`Photo ${i + 1}`}
                 >
                   <img
-                    src={p.thumb}
+                    src={p.smallThumb ?? p.thumb}
                     alt=""
                     loading="lazy"
                     decoding="async"

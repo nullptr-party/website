@@ -58,6 +58,7 @@ export const events: CommunityEvent[] = [
     venueId: 'most',
     image: '/events/talks-2.jpg',
     eventPage: '/events/nullpointer-talks-2',
+    youtubePlaylist: 'https://www.youtube.com/playlist?list=PL1rdjlpSaYF3Tz3NZx-8HdpViWOcOOBVC',
     speakers: [
       { name: 'Дмитрий Михальченков', role: 'Senior Android Engineer, inDrive', topic: 'Код-ревью: как перестать мучить команду' },
       { name: 'Алексей Орехов', role: 'Android Engineer', topic: 'Почему в 2026 нужно уходить из энтерпрайза и нырять в ИИ' },
