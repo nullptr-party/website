@@ -13,6 +13,9 @@ export async function GET(_req: Request, { params }: { params: Promise<{ photo: 
   const { photo } = await params;
   const buffer = await generateSmallThumbnail(EVENT, photo);
   return new Response(new Uint8Array(buffer), {
-    headers: { 'Content-Type': 'image/jpeg' },
+    headers: {
+      'Content-Type': 'image/jpeg',
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    },
   });
 }

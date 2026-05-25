@@ -77,6 +77,6 @@ async function generateResizedThumbnail(event: string, photo: string, width: num
   const srcPath = join(process.cwd(), 'public', 'events', event, photo);
   return sharp(srcPath)
     .resize({ width, withoutEnlargement: true })
-    .jpeg({ quality: THUMB_QUALITY, mozjpeg: true })
+    .jpeg({ quality: THUMB_QUALITY, mozjpeg: true, progressive: true })
     .toBuffer();
 }

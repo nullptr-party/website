@@ -82,25 +82,127 @@ export function PhotoGallery({ photos }: { photos: GalleryPhoto[] }) {
 
 function GalleryInner({ photos }: { photos: GalleryPhoto[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const heroRef = useRef<HTMLButtonElement>(null);
   const stripRef = useRef<HTMLDivElement>(null);
   const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
   const suppressClickRef = useRef(false);
   const suppressClickTimerRef = useRef<number | null>(null);
+  const animationTimerRef = useRef<number | null>(null);
   const { open } = useGallery();
   const active = photos[activeIndex];
+  const previousPhoto = photos[(activeIndex - 1 + photos.length) % photos.length];
+  const nextPhoto = photos[(activeIndex + 1) % photos.length];
 
   const showPhoto = (nextIndex: number) => {
     setActiveIndex((nextIndex + photos.length) % photos.length);
   };
 
-  const handleHeroPointerDown = (event: PointerEvent<HTMLButtonElement>) => {
-    pointerStartRef.current = { x: event.clientX, y: event.clientY };
+  const clearSuppressClick = () => {
+    if (suppressClickTimerRef.current !== null) {
+      window.clearTimeout(suppressClickTimerRef.current);
+      suppressClickTimerRef.current = null;
+    }
     suppressClickRef.current = false;
+  };
+
+  const scheduleSuppressClickReset = () => {
+    if (suppressClickTimerRef.current !== null) {
+      window.clearTimeout(suppressClickTimerRef.current);
+    }
+    suppressClickTimerRef.current = window.setTimeout(() => {
+      suppressClickRef.current = false;
+      suppressClickTimerRef.current = null;
+    }, 350);
+  };
+
+  const clearAnimation = () => {
+    if (animationTimerRef.current !== null) {
+      window.clearTimeout(animationTimerRef.current);
+      animationTimerRef.current = null;
+    }
+  };
+
+  const finishSwipe = (direction: 1 | -1) => {
+    const heroWidth = heroRef.current?.clientWidth ?? 0;
+    clearAnimation();
+    suppressClickRef.current = true;
+    scheduleSuppressClickReset();
+
+    if (heroWidth <= 0) {
+      showPhoto(activeIndex + direction);
+      setDragOffset(0);
+      return;
+    }
+
+    setIsDragging(false);
+    setIsAnimating(true);
+    setDragOffset(direction === 1 ? -heroWidth : heroWidth);
+
+    animationTimerRef.current = window.setTimeout(() => {
+      showPhoto(activeIndex + direction);
+      setIsAnimating(false);
+      setDragOffset(0);
+      animationTimerRef.current = null;
+    }, 180);
+  };
+
+  const cancelSwipe = () => {
+    clearAnimation();
+    setIsDragging(false);
+    setIsAnimating(true);
+    setDragOffset(0);
+
+    animationTimerRef.current = window.setTimeout(() => {
+      setIsAnimating(false);
+      animationTimerRef.current = null;
+    }, 180);
+  };
+
+  const handleHeroPointerDown = (event: PointerEvent<HTMLButtonElement>) => {
+    if (isAnimating) {
+      return;
+    }
+
+    pointerStartRef.current = { x: event.clientX, y: event.clientY };
+    clearSuppressClick();
+    clearAnimation();
+    setIsDragging(false);
+    setDragOffset(0);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handleHeroPointerMove = (event: PointerEvent<HTMLButtonElement>) => {
+    const start = pointerStartRef.current;
+
+    if (!start || photos.length < 2) {
+      return;
+    }
+
+    const deltaX = event.clientX - start.x;
+    const deltaY = event.clientY - start.y;
+    const isHorizontal =
+      Math.abs(deltaX) > 8 &&
+      Math.abs(deltaX) > Math.abs(deltaY) * SWIPE_AXIS_RATIO;
+
+    if (!isDragging && !isHorizontal) {
+      return;
+    }
+
+    const heroWidth = heroRef.current?.clientWidth ?? 0;
+    const maxOffset = heroWidth > 0 ? heroWidth * 0.92 : Math.abs(deltaX);
+    const boundedOffset = Math.max(-maxOffset, Math.min(maxOffset, deltaX));
+
+    setIsDragging(true);
+    setDragOffset(boundedOffset);
   };
 
   const handleHeroPointerUp = (event: PointerEvent<HTMLButtonElement>) => {
     const start = pointerStartRef.current;
     pointerStartRef.current = null;
+    event.currentTarget.releasePointerCapture(event.pointerId);
 
     if (!start || photos.length < 2) {
       return;
@@ -113,31 +215,28 @@ function GalleryInner({ photos }: { photos: GalleryPhoto[] }) {
       Math.abs(deltaX) > Math.abs(deltaY) * SWIPE_AXIS_RATIO;
 
     if (!isHorizontalSwipe) {
+      if (isDragging) {
+        cancelSwipe();
+      }
       return;
     }
 
-    suppressClickRef.current = true;
-    if (suppressClickTimerRef.current !== null) {
-      window.clearTimeout(suppressClickTimerRef.current);
-    }
-    suppressClickTimerRef.current = window.setTimeout(() => {
-      suppressClickRef.current = false;
-      suppressClickTimerRef.current = null;
-    }, 350);
-    showPhoto(deltaX < 0 ? activeIndex + 1 : activeIndex - 1);
+    finishSwipe(deltaX < 0 ? 1 : -1);
   };
 
-  const handleHeroPointerCancel = () => {
+  const handleHeroPointerCancel = (event: PointerEvent<HTMLButtonElement>) => {
     pointerStartRef.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    if (isDragging) {
+      cancelSwipe();
+    }
   };
 
   const handleHeroClick = () => {
     if (suppressClickRef.current) {
-      if (suppressClickTimerRef.current !== null) {
-        window.clearTimeout(suppressClickTimerRef.current);
-        suppressClickTimerRef.current = null;
-      }
-      suppressClickRef.current = false;
+      clearSuppressClick();
       return;
     }
 
@@ -155,6 +254,7 @@ function GalleryInner({ photos }: { photos: GalleryPhoto[] }) {
       if (suppressClickTimerRef.current !== null) {
         window.clearTimeout(suppressClickTimerRef.current);
       }
+      clearAnimation();
     };
   }, []);
 
@@ -162,20 +262,33 @@ function GalleryInner({ photos }: { photos: GalleryPhoto[] }) {
     <>
       {/* Big active photo — fixed height, aspect-ratio preserved */}
       <button
+        ref={heroRef}
         onClick={handleHeroClick}
         onPointerDown={handleHeroPointerDown}
+        onPointerMove={handleHeroPointerMove}
         onPointerUp={handleHeroPointerUp}
         onPointerCancel={handleHeroPointerCancel}
-        className="block w-full bg-[#1e1e1e] rounded-sm border border-[#FFD700]/20 overflow-hidden cursor-zoom-in"
+        className="relative block w-full bg-[#1e1e1e] rounded-sm border border-[#FFD700]/20 overflow-hidden cursor-zoom-in"
         style={{ height: HERO_HEIGHT, touchAction: 'pan-y' }}
         aria-label="Open fullscreen"
       >
-        <img
-          key={active.src}
-          src={active.thumb}
-          alt=""
-          className="w-full h-full object-contain"
-        />
+        {[
+          { photo: previousPhoto, position: -1 },
+          { photo: active, position: 0 },
+          { photo: nextPhoto, position: 1 },
+        ].map(({ photo, position }) => (
+          <img
+            key={`${photo.src}-${position}`}
+            src={photo.thumb}
+            alt=""
+            draggable={false}
+            className="absolute inset-0 w-full h-full object-contain select-none"
+            style={{
+              transform: `translateX(calc(${position * 100}% + ${dragOffset}px))`,
+              transition: isDragging ? 'none' : isAnimating ? 'transform 180ms ease-out' : 'none',
+            }}
+          />
+        ))}
       </button>
 
       {/* Thumbnail strip — each thumb is a PhotoSwipe Item (for ref/animation), click selects active */}
