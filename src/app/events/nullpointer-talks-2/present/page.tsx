@@ -3,7 +3,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 
-const partners = [
+type Partner = { name: string; logo?: string };
+
+const partners: Partner[] = [
   { name: 'Almaty Java Community', logo: '/partners/almaty-java.jpg' },
   { name: 'Bereke Bank', logo: '/partners/bereke-bank.svg' },
   { name: 'KZ IT Events', logo: '/partners/kz-it-events.jpg' },
@@ -12,6 +14,19 @@ const partners = [
   { name: 'per malī ad astra', logo: '/partners/maliastra.jpg' },
   { name: 'Pavel Korolev. Потяжелее', logo: '/partners/pavel-korolev.jpg' },
   { name: 'Android Hours', logo: '/partners/android-hours.png' },
+];
+
+export const talks3Partners: Partner[] = [
+  { name: 'MOST', logo: '/partners/most.svg' },
+  { name: 'Bereke Bank', logo: '/partners/bereke-bank.svg' },
+  { name: 'KZ IT Events', logo: '/partners/kz-it-events.jpg' },
+  { name: 'Макс (добрый)', logo: '/partners/max-dobry.jpg' },
+  { name: 'Mobile Dev KZ', logo: '/partners/mobile-dev-kz.svg' },
+  { name: 'per malī ad astra', logo: '/partners/maliastra.jpg' },
+  { name: 'Almaty Java Community', logo: '/partners/almaty-java.jpg' },
+  { name: 'GDG Almaty', logo: '/partners/gdg-almaty.jpg' },
+  { name: 'devs.kz', logo: '/partners/devs-kz.png' },
+  { name: 'Startup Chaihona', logo: '/partners/startup-chaihona.png' },
 ];
 
 function SlideBackground() {
@@ -55,11 +70,11 @@ function WhiteQR({ value, className }: { value: string; className?: string }) {
 
 const QR_CLASS = 'w-[50vh] h-[50vh]';
 
-function SlideWifi() {
+function SlideWifi({ showMostLogo }: { showMostLogo: boolean }) {
   return (
     <div className="relative w-full h-full bg-[#2e2e2e] flex items-center justify-center">
       <SlideBackground />
-      <MostLogo />
+      {showMostLogo && <MostLogo />}
 
       <div className="relative z-10 flex items-start justify-center gap-[8vw] w-full px-[6vw]">
         {/* WiFi */}
@@ -85,15 +100,15 @@ function SlideWifi() {
   );
 }
 
-function PartnerCard({ partner }: { partner: (typeof partners)[number] }) {
+function PartnerCard({ partner }: { partner: Partner }) {
   return (
     <div className="flex flex-col items-center gap-[0.5vh]">
       <div className="w-[20vh] h-[20vh] overflow-hidden rounded-md bg-[#3a3a3a] border border-[#4a4a4a] flex items-center justify-center p-2">
-        <img
-          src={partner.logo}
-          alt={partner.name}
-          className="object-contain w-full h-full"
-        />
+        {partner.logo ? (
+          <img src={partner.logo} alt={partner.name} className="object-contain w-full h-full" />
+        ) : (
+          <span className="text-white text-center font-[var(--font-press-start)] text-[1.8vh] leading-relaxed">{partner.name}</span>
+        )}
       </div>
       <span className="font-[var(--font-press-start)] text-[1.4vh] text-center text-white/80 leading-tight max-w-[18vh]">
         {partner.name}
@@ -102,14 +117,14 @@ function PartnerCard({ partner }: { partner: (typeof partners)[number] }) {
   );
 }
 
-function SlidePartners() {
-  const left = partners.slice(0, 4);
-  const right = partners.slice(4, 8);
+function SlidePartners({ partners: slidePartners, eventIndex }: { partners: Partner[]; eventIndex: number }) {
+  const left = slidePartners.slice(0, Math.ceil(slidePartners.length / 2));
+  const right = slidePartners.slice(Math.ceil(slidePartners.length / 2));
 
   return (
     <div className="relative w-full h-full bg-[#2e2e2e]">
       <SlideBackground />
-      <MostLogo />
+      {eventIndex === 2 && <MostLogo />}
 
       <div className="relative z-10 w-full h-full flex flex-col">
         {/* Title */}
@@ -127,13 +142,15 @@ function SlidePartners() {
 
           {/* Central QR */}
           <div className="w-[45vh] h-[45vh]">
-            <WhiteQR value="https://nullptr.party/events/nullpointer-talks-2" />
+            <WhiteQR value={`https://nullptr.party/events/nullpointer-talks-${eventIndex}`} />
           </div>
 
           {/* Right column */}
           <div className="grid grid-cols-2 gap-[2vh]">
-            {right.map((p) => (
-              <PartnerCard key={p.name} partner={p} />
+            {right.map((p, i) => (
+              <div key={p.name} className={eventIndex === 3 && i === right.length - 1 && right.length % 2 === 1 ? 'col-start-2' : undefined}>
+                <PartnerCard partner={p} />
+              </div>
             ))}
           </div>
         </div>
@@ -142,11 +159,11 @@ function SlidePartners() {
   );
 }
 
-function SlideClosing() {
+function SlideClosing({ feedbackUrl = 'https://forms.gle/pFS4uaErfrKuJW6D8', showMostLogo }: { feedbackUrl?: string | null; showMostLogo: boolean }) {
   return (
     <div className="relative w-full h-full bg-[#2e2e2e] flex items-center justify-center">
       <SlideBackground />
-      <MostLogo />
+      {showMostLogo && <MostLogo />}
 
       <div className="relative z-10 flex items-start justify-center gap-[8vw] w-full px-[6vw]">
         {/* Telegram */}
@@ -157,44 +174,41 @@ function SlideClosing() {
           <p className="font-[var(--font-press-start)] text-white text-[4.5vh]">Мы в Telegram</p>
         </div>
 
-        {/* Feedback */}
-        <div className="flex flex-col items-center gap-[2vh]">
-          <div className={QR_CLASS}>
-            <WhiteQR value="https://forms.gle/pFS4uaErfrKuJW6D8" />
+        {feedbackUrl && (
+          <div className="flex flex-col items-center gap-[2vh]">
+            <div className={QR_CLASS}>
+              <WhiteQR value={feedbackUrl} />
+            </div>
+            <p className="font-[var(--font-press-start)] text-white text-[4.5vh]">Обратная связь</p>
           </div>
-          <p className="font-[var(--font-press-start)] text-white text-[4.5vh]">Обратная связь</p>
-        </div>
+        )}
       </div>
     </div>
   );
 }
 
-const slides = [
-  { id: 'wifi', component: SlideWifi },
-  { id: 'partners', component: SlidePartners },
-  { id: 'closing', component: SlideClosing },
-];
+const slideIds = ['wifi', 'partners', 'closing'];
 
 function getInitialSlide() {
   if (typeof window === 'undefined') return 0;
   const hash = window.location.hash.replace('#', '');
-  const idx = slides.findIndex((s) => s.id === hash);
+  const idx = slideIds.indexOf(hash);
   return idx >= 0 ? idx : 0;
 }
 
-export default function PresentPage() {
+export function Presentation({ partners: slidePartners, eventIndex, feedbackUrl }: { partners: Partner[]; eventIndex: number; feedbackUrl?: string | null }) {
   const [current, setCurrent] = useState(getInitialSlide);
 
   const goTo = useCallback((idx: number) => {
-    const clamped = Math.max(0, Math.min(slides.length - 1, idx));
+    const clamped = Math.max(0, Math.min(slideIds.length - 1, idx));
     setCurrent(clamped);
-    window.location.hash = slides[clamped].id;
+    window.location.hash = slideIds[clamped];
   }, []);
 
   useEffect(() => {
     const onHash = () => {
       const hash = window.location.hash.replace('#', '');
-      const idx = slides.findIndex((s) => s.id === hash);
+      const idx = slideIds.indexOf(hash);
       if (idx >= 0) setCurrent(idx);
     };
     window.addEventListener('hashchange', onHash);
@@ -215,11 +229,17 @@ export default function PresentPage() {
     return () => window.removeEventListener('keydown', handler);
   }, [current, goTo]);
 
-  const Slide = slides[current].component;
+  const Slide = current === 0 ? <SlideWifi showMostLogo={eventIndex === 2} /> : current === 1
+    ? <SlidePartners partners={slidePartners} eventIndex={eventIndex} />
+    : <SlideClosing feedbackUrl={feedbackUrl} showMostLogo={eventIndex === 2} />;
 
   return (
     <div className="w-screen h-screen overflow-hidden cursor-none select-none">
-      <Slide />
+      {Slide}
     </div>
   );
+}
+
+export default function PresentPage() {
+  return <Presentation partners={partners} eventIndex={2} />;
 }

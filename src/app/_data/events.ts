@@ -49,6 +49,21 @@ export interface CommunityEvent {
 export const events: CommunityEvent[] = [
   // === 2026 ===
   {
+    id: 'talks-3',
+    type: 'talks',
+    number: 3,
+    talksIndex: 3,
+    date: '2026-09-24',
+    title: 'nullptr.talks[3]',
+    venueId: 'most',
+    eventPage: '/events/nullpointer-talks-3',
+    speakers: [
+      { name: 'Виктор Гордиенко', role: 'Senior iOS Engineer, inDrive', topic: 'Агентные процессы и оркестрация в iOS-разработке' },
+      { name: 'Арыстан Тельбай', role: 'Android Developer, ForteBank', topic: 'Агент, сделай проект. Не делай ошибок' },
+      { name: 'Павел Королёв', role: 'Android Tech Lead, QazCode', topic: 'Я навайбкодил систему для производства квизов' },
+    ],
+  },
+  {
     id: 'meetup-53',
     type: 'meetup',
     number: 53,
