@@ -1,0 +1,1496 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#202124">
+<title>Агент, сделай проект. Не делай ошибок. — CoachTrack</title>
+<style>
+/* =========================================================================
+   CoachTrack Talk — единственный слой стилей.
+   Тема: асфальт + сигнальный жёлтый. Правь токены здесь, а не в разметке.
+   ========================================================================= */
+
+:root{
+  color-scheme:dark;
+
+  /* поверхности */
+  --bg:#202124;          /* фон слайда */
+  --paper:#292b2f;       /* кадры, плашки */
+  --line:#575b61;        /* линии и рамки */
+  --line-strong:#646a72;
+
+  /* текст */
+  --ink:#e5e5df;
+  --muted:#a9adb2;
+  --dim:#9298a0;
+
+  /* акценты: три роли, три разных цвета */
+  --accent:#e4c84b;      /* основной — жёлтый */
+  --steel:#b9c1c9;       /* инженерия */
+  --sand:#c9a86a;        /* доставка, награды */
+  --ok:#a6c395;
+  --bad:#ec7e83;
+
+  /* цвет участника: переопределяется на карточке через --agent */
+  --agent:var(--accent);
+
+  --font:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,Arial,sans-serif;
+  --frame-ar:1080 / 2424; /* пропорции записи экрана телефона */
+
+  --stage-w:1600px;
+  --stage-h:900px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,p,figure{margin-top:0}
+h2,h3{text-wrap:balance}
+p,li{text-wrap:pretty}
+button{font:inherit;color:inherit;cursor:pointer;border:1px solid var(--line);
+  border-radius:9px;background:#2c2f34;padding:8px 14px}
+button:hover{background:#393d42}
+button:disabled{opacity:.4;cursor:default}
+:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+[hidden]{display:none!important}
+.noscript{padding:40px}
+
+/* --------------------------------------------------------------- сцена */
+.viewport{height:100dvh;position:relative;overflow:hidden}
+.stage{position:absolute;left:50%;top:50%;width:var(--stage-w);height:var(--stage-h);
+  transform-origin:center;transform:translate(-50%,-50%)}
+
+.slide{
+  width:var(--stage-w);height:var(--stage-h);padding:64px 88px 72px;
+  display:none;position:relative;overflow:hidden;
+  background-color:var(--bg);
+  background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMjAiIGhlaWdodD0iMjIwIj48ZmlsdGVyIGlkPSJnIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBjb2xvci1pbnRlcnBvbGF0aW9uLWZpbHRlcnM9InNSR0IiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuNzQiIG51bU9jdGF2ZXM9IjIiIHNlZWQ9IjE3IiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjxmZUNvbXBvbmVudFRyYW5zZmVyPjxmZUZ1bmNSIHR5cGU9ImxpbmVhciIgc2xvcGU9Ii4xMyIgaW50ZXJjZXB0PSIuMDYiLz48ZmVGdW5jRyB0eXBlPSJsaW5lYXIiIHNsb3BlPSIuMTMiIGludGVyY2VwdD0iLjA2NCIvPjxmZUZ1bmNCIHR5cGU9ImxpbmVhciIgc2xvcGU9Ii4xMyIgaW50ZXJjZXB0PSIuMDc1Ii8+PGZlRnVuY0EgdHlwZT0ibGluZWFyIiBzbG9wZT0iMCIgaW50ZXJjZXB0PSIxIi8+PC9mZUNvbXBvbmVudFRyYW5zZmVyPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIyMjAiIGhlaWdodD0iMjIwIiBmaWxsPSIjMjAyMTI0Ii8+PHJlY3Qgd2lkdGg9IjIyMCIgaGVpZ2h0PSIyMjAiIGZpbHRlcj0idXJsKCNnKSIvPjwvc3ZnPg==");
+  background-size:220px 220px;background-repeat:repeat;
+}
+.slide.active{display:flex;flex-direction:column}
+
+/* ------------------------------------------------------- типографика */
+h1{font-size:100px;line-height:1.02;letter-spacing:-.015em;margin-bottom:36px;font-weight:800}
+h2{font-size:63px;line-height:1.08;letter-spacing:-.01em;margin-bottom:34px;max-width:1370px}
+h3{font-size:34px;line-height:1.18;margin-bottom:19px;letter-spacing:-.02em}
+
+.kicker{
+  display:flex;align-items:center;gap:15px;
+  font-size:22px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 25px;
+}
+.kicker:before{content:'';width:38px;height:8px;flex-shrink:0;
+  border-top:2px solid currentColor;border-bottom:2px solid currentColor}
+
+.draft{position:absolute;right:88px;top:62px;font-size:22px;color:var(--dim);letter-spacing:.04em}
+.lede{font-size:32px;line-height:1.45;color:var(--muted);max-width:1050px}
+.lede strong{color:var(--ink)}
+.muted{color:var(--muted)}
+.accent{color:var(--accent)}
+.takeaway{margin-top:auto;padding-top:34px;font-size:28px;line-height:1.35;
+  color:var(--accent);font-weight:700;
+  background:repeating-linear-gradient(90deg,var(--ink) 0 56px,transparent 56px 96px) left top / 100% 5px no-repeat}
+.mini-tag{font-size:22px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:12px}
+.number{font-size:62px;color:var(--accent);font-weight:800;margin:0 0 23px;letter-spacing:-.015em}
+
+/* ------------------------------------------------------------ сетки */
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:45px}
+.cols.two{grid-template-columns:1fr 1fr;gap:76px}
+.col{min-width:0}
+.col p{font-size:29px;line-height:1.45;color:var(--muted)}
+
+.list{list-style:none;padding:0;margin:0;display:grid;gap:20px}
+.list li{font-size:29px;line-height:1.4;padding-left:46px;position:relative}
+.list li:before{content:'—';position:absolute;left:0;width:29px;color:var(--accent)}
+
+.bigpair{display:grid;grid-template-columns:1fr 1fr;gap:75px;margin-top:50px}
+.bigpair .value{font-size:95px;font-weight:800;letter-spacing:-.055em;line-height:1.1}
+.bigpair .label{font-size:22px;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:27px}
+
+/* ------------------------------------------------------ 01 · обложка */
+.cover-layout{display:grid;grid-template-columns:1fr 265px;gap:40px;align-items:center;flex:1}
+.cover-eyebrow{font-size:22px;color:var(--muted);margin-bottom:30px}
+.cover-layout h1{font-size:108px}
+.cover-layout .lede{font-size:29px}
+.cover-number{align-self:center;border-left:1px solid var(--line);padding-left:38px}
+.cover-number span{display:block;font-size:165px;font-weight:800;letter-spacing:-.02em;
+  line-height:1;color:var(--accent)}
+.cover-number small{display:block;font-size:22px;color:var(--muted);line-height:1.5;margin-top:25px}
+.hero-bottom{font-size:22px;color:var(--muted);letter-spacing:.04em}
+
+/* --------------------------------------------------------- 02 · схема */
+.network{display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;gap:48px;margin-top:36px}
+.network .node{padding:30px 0}
+.network .node.center{border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);
+  text-align:center}
+.network .node p{font-size:28px;color:var(--muted);line-height:1.45}
+.network .transfer{font-size:22px;color:var(--ink);margin-top:20px}
+
+/* ------------------------------------------------------ 03 · участники */
+.differs{font-size:24px;line-height:1.5;color:var(--muted);margin:26px 0 0}
+.differs b{color:var(--ink);font-weight:600}
+.fn-mark{color:var(--accent);font-size:.6em;vertical-align:super;margin-left:2px}
+.roster{display:grid;grid-template-columns:repeat(3,1fr);gap:30px 60px;margin-top:26px;margin-bottom:22px}
+.contestant{border-top:2px solid var(--agent);padding-top:25px}
+.contestant .model{font-size:47px;font-weight:800;margin-bottom:12px}
+.contestant .harness{font-size:28px;color:var(--muted)}
+.contestant .no{float:right;font-size:29px;font-weight:800;line-height:1;
+  color:var(--agent);border:1px solid var(--line);padding:8px 10px;margin-top:-8px;
+  font-variant-numeric:tabular-nums}
+
+/* --------------------------------------------------------- 05 · цитата */
+.quote{padding:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  font-size:35px;line-height:1.4;margin:5px 0 32px}
+
+/* --------------------------------------------------------- 07 · правила */
+.limits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:35px;margin-top:8px;max-width:940px}
+.limits>div{border-top:2px solid var(--line);padding-top:16px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+.limits strong{display:inline-flex;align-items:baseline;gap:10px;
+  font-size:65px;line-height:1;letter-spacing:-.015em;color:var(--accent)}
+.limits .limit-unit{font-size:32px;line-height:1.15;font-weight:600;letter-spacing:0;color:var(--ink)}
+.limits .limit-desc{font-size:22px;line-height:1.4;color:var(--muted)}
+.limits{margin-bottom:auto}
+.rule-bottom{display:grid;grid-template-columns:1fr 1.15fr;gap:70px;margin-top:auto}
+.rule-bottom h3{font-size:29px}
+.rule-bottom p{font-size:24px;color:var(--muted);line-height:1.45}
+.severity{display:grid;gap:19px}
+.severity>div{display:flex;gap:22px;align-items:start}
+.severity b{font-size:28px;color:var(--bad);min-width:42px}
+.severity>div:last-child b{color:var(--muted)}
+.severity span{font-size:23px;line-height:1.4}
+
+/* ============================================== 08–14 · слайды с видео */
+.media-slide{padding:48px 88px 60px}
+
+/* Слайд делится на колонку с текстом и рейл с кадрами.
+   Кадры занимают всю высоту слайда — от неё зависит их ширина. */
+.media-body{display:grid;grid-template-columns:1fr auto;gap:56px;flex:1;min-height:0}
+.media-info{display:flex;flex-direction:column;min-width:0;position:relative}
+.media-info .kicker{margin-top:16px;margin-bottom:22px}
+.media-info h2{font-size:42px;margin-bottom:16px}
+.media-sub{font-size:24px;line-height:1.4;color:var(--muted);margin:0}
+
+.info-active{border-top:1px solid var(--line);margin-top:34px;padding-top:26px}
+.info-active .panel-no{font-size:34px;font-weight:700;color:var(--agent);
+  margin-bottom:6px;font-variant-numeric:tabular-nums}
+.info-active .panel-harness{font-size:24px;color:var(--muted);margin:0}
+.info-active .panel-note{font-size:26px;line-height:1.4;margin:24px 0 0}
+.panel-status{margin-top:auto;padding-top:24px}
+.media-info .draft{position:static;margin-top:18px;font-size:22px}
+
+/* --- рейл с кадрами --------------------------------------------------- */
+/* --fr — пропорция записи экрана. Эмуляторы пишут 1080x2424 (METHODOLOGY §3),
+   это 9:20.2 = .4455. Снимаешь 9:16 — ставь .5625, 9:19.5 — .4615. */
+:root{--fr:.4455}
+.media-rail{display:flex;gap:24px;align-items:flex-end;min-height:0}
+.media-card{--fh:468px;width:calc(var(--fh) * var(--fr));
+  cursor:pointer;opacity:.62;transition:opacity .18s ease}
+.media-card:hover{opacity:.8}
+.media-card.is-active{--fh:780px;opacity:1}
+
+.frame{
+  position:relative;overflow:hidden;
+  height:var(--fh);width:100%;
+  background:var(--paper);border:1px solid #52565c;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+}
+.media-card.is-active .frame{border-color:var(--agent)}
+
+/* номер конфигурации живёт только здесь — в текстовой колонке он не повторяется */
+.frame-no{position:absolute;left:12px;top:12px;z-index:2;
+  font-size:24px;font-weight:800;line-height:1;color:var(--agent);
+  background:#0d0f12d9;border-radius:6px;padding:6px 10px;font-variant-numeric:tabular-nums}
+.media-card.is-active .frame-no{font-size:28px}
+
+.frame video,.frame img{width:100%;height:100%;object-fit:contain;display:block;
+  transform:scale(var(--zoom,1));transform-origin:var(--zoom-origin,50% 42%);
+  transition:transform .2s ease;background:#000}
+.frame .empty{text-align:center;padding:18px;color:var(--muted);font-size:22px;line-height:1.4}
+.frame .empty strong{display:block;font-size:44px;font-weight:600;color:#c8cdd2;margin-bottom:22px}
+.media-card:not(.is-active) .empty{font-size:22px}
+.media-card:not(.is-active) .empty strong{font-size:34px;margin-bottom:16px}
+
+/* бейджи состояния — видны только когда что-то не по умолчанию */
+.frame-badges{position:absolute;right:10px;top:10px;z-index:2;display:flex;gap:6px;pointer-events:none}
+.frame-badges b{font-size:20px;font-weight:700;letter-spacing:.04em;
+  background:#0d0f12cc;color:var(--accent);border-radius:5px;padding:4px 8px}
+.frame-play{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+  pointer-events:none}
+.media-card.is-active .frame.is-paused .frame-play{display:flex}
+.frame-play span{width:66px;height:66px;border-radius:50%;background:#0d0f12b3;
+  border:1px solid #ffffff40;display:grid;place-items:center;color:#fff;font-size:24px;padding-left:5px}
+
+/* Until actual playback, neither the poster nor a decoded frame reveals the UI. */
+.media-card:not(.is-revealed) .video-poster,
+.media-card:not(.is-revealed) video{visibility:hidden}
+.frame-cover{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:18px;padding:24px;text-align:center;
+  background:linear-gradient(145deg,#2b2d30,#202124);pointer-events:none}
+.frame-cover strong{font-size:28px;color:var(--ink)}
+.frame-cover span{font-size:22px;line-height:1.4;color:var(--muted)}
+.media-card.is-active .frame-cover{gap:100px}
+.media-card.is-revealed .frame-cover{display:none}
+.frame-notice{position:absolute;inset:0;z-index:4;display:flex;align-items:center;
+  justify-content:center;text-align:center;padding:22px;background:#202124ed;
+  color:var(--ink);font-size:22px;line-height:1.4;pointer-events:none}
+.frame-notice[hidden]{display:none}
+.frame:fullscreen{width:100vw;height:100vh;border:0;border-radius:0;background:#000}
+.frame:fullscreen video{object-fit:contain}
+@media print{
+  .media-card .video-poster{visibility:visible!important}
+  .frame-cover,.frame-notice{display:none!important}
+}
+
+/* правая колонка со сценарием */
+.media-panel{display:flex;flex-direction:column;min-width:0;padding-top:6px}
+.media-panel .panel-no{font-size:20px;letter-spacing:.14em;color:var(--agent);
+  font-weight:800;margin-bottom:10px}
+.media-panel h3{font-size:40px;margin-bottom:6px}
+.media-panel .panel-harness{font-size:24px;color:var(--muted);margin-bottom:28px}
+.panel-rows{display:grid;gap:20px;border-top:1px solid var(--line);padding-top:22px}
+.panel-rows>div{display:grid;grid-template-columns:150px 1fr;gap:22px;align-items:baseline}
+.panel-rows dt{font-size:17px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim)}
+.panel-rows dd{margin:0;font-size:24px;line-height:1.4;color:var(--ink)}
+.panel-status{margin-top:auto;padding-top:20px}
+
+.pill{display:inline-block;font-size:22px;padding:5px 11px;border:1px solid var(--line);
+  border-radius:20px;color:var(--muted)}
+.pill.pass{color:var(--ok);border-color:#6d8361}
+.pill.fail{color:var(--bad);border-color:#a55d64}
+
+/* ------------------------------------------------------- 15 · код */
+.arch-matrix{margin:14px 0 30px}
+.arch-matrix tbody tr:last-child td{border-bottom:0}
+.arch-matrix th:first-child{width:290px}
+.arch-matrix th:last-child{width:150px}
+
+/* ------------------------------------------------- 16 · архитектура */
+.steps{margin-top:auto;padding-top:30px;border-top:1px solid var(--line)}
+.steps-title{font-size:26px;font-weight:600;color:var(--ink);margin:0 0 18px}
+.steps ol{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:44px;
+  counter-reset:step}
+.steps li{font-size:23px;line-height:1.4;color:var(--muted);padding-left:44px;position:relative;
+  counter-increment:step}
+.steps li:before{content:counter(step,decimal-leading-zero);position:absolute;left:0;top:1px;
+  font-size:22px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums}
+.steps li b{color:var(--ink);font-weight:600}
+.criteria{display:grid;grid-template-columns:1fr 1fr;gap:36px 75px}
+.criteria h3{font-size:30px;margin-bottom:11px}
+.criteria p{font-size:27px;color:var(--muted);line-height:1.4;margin-bottom:0}
+
+/* ---------------------------------------------------- 17 · критерии */
+.weights{display:grid;grid-template-columns:repeat(3,1fr);gap:45px;align-items:start}
+.weights h3{font-size:30px}
+.weight{font-size:80px;font-weight:800;line-height:1;letter-spacing:-.015em;margin-bottom:17px;
+  color:var(--group,var(--accent))}
+.weight small{font-size:32px;letter-spacing:-.02em}
+.weights .row{display:flex;justify-content:space-between;gap:24px;
+  border-bottom:1px solid var(--line);padding:13px 0;font-size:23px;line-height:1.35}
+.weights .row b{color:var(--group,var(--accent));font-weight:600}
+.weight-caption{font-size:22px;color:var(--muted);margin-top:18px;line-height:1.4}
+
+/* --------------------------------------------------- 18 · номинации */
+.nomination-pair{display:grid;grid-template-columns:1fr 1fr;gap:100px;margin:auto 0}
+.nomination-pair article{border-top:2px solid var(--line);padding-top:25px}
+.nomination-pair h3{font-size:45px}
+.nomination-pair p:not(.number){font-size:28px;color:var(--muted);line-height:1.5}
+.winner-line{font-size:24px;color:var(--accent);margin-top:35px}
+
+/* -------------------------------------------------- 19 · победитель */
+.racing-winner-layout{display:grid;grid-template-columns:380px 1fr;gap:100px;
+  align-items:center;flex:1;min-height:0}
+.racing-car{margin:0;width:350px;justify-self:center}
+.racing-car svg{width:100%;height:auto;display:block}
+.racing-winner-copy h2{font-size:132px;margin-bottom:30px;color:var(--accent)}
+.concept-label{display:inline-block;border:1px solid #8c7c33;border-radius:3px;
+  padding:8px 12px;font-size:22px;color:var(--accent);text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:25px}
+.concept-config{font-size:30px;line-height:1.45;margin-bottom:30px;color:var(--muted)}
+.concept-config strong{font-size:37px;color:var(--ink)}
+.concept-note{font-size:26px;line-height:1.5;color:var(--muted)}
+.footnote{font-size:22px;line-height:1.45;color:var(--muted);margin:26px 0 22px}
+
+/* ------------------------------------------------------ 21 · таблица */
+.table-scroll{min-width:0}
+.matrix{width:100%;border-collapse:collapse;font-size:24px;line-height:1.25;table-layout:fixed}
+.matrix th{text-align:center;color:var(--muted);font-weight:400;font-size:22px;
+  line-height:1.45;padding:14px 12px;border-bottom:1px solid var(--line-strong)}
+.matrix th:first-child{width:300px;text-align:left}
+.matrix th:last-child{width:230px}
+.matrix th span{color:var(--dim)}
+.matrix td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:center;
+  font-variant-numeric:tabular-nums}
+.matrix th:first-child,.matrix td:first-child{padding-left:0;text-align:left}
+.matrix .model-cell{font-weight:700}
+.matrix .model-cell{white-space:nowrap}
+.matrix .model-cell span{color:var(--muted);font-weight:400}
+.matrix .total{font-size:30px;font-weight:800;color:var(--accent)}
+.table-key{display:flex;gap:44px;justify-content:flex-start;font-size:22px;
+  color:var(--muted);margin-top:25px}
+.final-slide{padding-top:48px;padding-bottom:48px}
+.final-slide .kicker{margin-bottom:16px}
+.final-slide h2{font-size:56px;margin-bottom:16px}
+.final-slide .takeaway{font-size:24px;margin-top:18px;padding-top:22px}
+.results-matrix col:nth-child(1){width:242px}
+.results-matrix col:nth-child(2){width:122px}
+.results-matrix col:nth-child(3){width:154px}
+.results-matrix col:nth-child(4){width:122px}
+.results-matrix col:nth-child(5){width:96px}
+.results-matrix col:nth-child(6){width:90px}
+.results-matrix col:nth-child(7),.results-matrix col:nth-child(8),
+.results-matrix col:nth-child(9){width:60px}
+.results-matrix col:nth-child(10),.results-matrix col:nth-child(11){width:134px}
+.results-matrix col:nth-child(12){width:150px}
+.results-matrix th{padding:8px 6px;line-height:1.3}
+.results-matrix th:first-child,.results-matrix th:last-child{width:auto}
+.results-matrix td{padding:6px 6px}
+.results-matrix thead tr:nth-child(2) th:first-child{text-align:center;padding-left:6px}
+.results-matrix .model-cell{white-space:normal}
+.results-matrix .model-cell span{display:block;font-size:22px}
+.results-matrix .group-start{border-left:1px solid var(--line-strong)}
+.results-notes{font-size:22px;line-height:1.35;color:var(--muted);margin:18px 0 0}
+.results-notes p{margin:0 0 5px}
+
+/* --------------------------------------------------------- пагинатор */
+.pager{position:fixed;right:22px;bottom:15px;z-index:20;display:flex;align-items:center;gap:12px;
+  background:#202124ee;border:1px solid var(--line);border-radius:40px;padding:5px 9px;opacity:0}
+.pager:hover,.pager:focus-within{opacity:1}
+.pager button{width:36px;height:32px;border:0;background:transparent;padding:0;font-size:22px}
+.pager span{font-size:13px;font-variant-numeric:tabular-nums;color:var(--muted);
+  min-width:42px;text-align:center}
+
+/* ------------------------------------------------------- подсказка ? */
+.help{position:fixed;inset:0;z-index:30;display:none;place-items:center;background:#0c0e11e8}
+.help[open]{display:grid}
+.help-card{background:var(--paper);border:1px solid var(--line);border-radius:16px;
+  padding:34px 40px;max-width:640px}
+.help-card h3{font-size:24px;margin-bottom:20px}
+.help-card dl{display:grid;grid-template-columns:auto 1fr;gap:12px 22px;margin:0;font-size:16px}
+.help-card dt{font-weight:700;color:var(--accent);white-space:nowrap}
+.help-card dd{margin:0;color:var(--muted)}
+.help-card p{font-size:14px;color:var(--dim);margin:22px 0 0}
+kbd{font:inherit;border:1px solid var(--line);border-radius:5px;padding:1px 6px;background:#1b1d21}
+
+/* ------------------------------------------- поочерёдный выход текста */
+/* Блоки текстового слайда проявляются по очереди сверху вниз. Медиаслайды
+   не трогаем: там главное — кадр, а не текст, и задержка мешала бы пуску.
+   Задержка ставится отдельными правилами, а не в сокращении animation,
+   иначе сокращение обнуляло бы её. check.js и shots.js ходят с
+   reducedMotion:'reduce' и меряют уже проявленную страницу. */
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+@media(prefers-reduced-motion:no-preference){
+  .slide.active:not(.media-slide)>*:not(:where(.cols,.roster,.network,.limits,
+    .rule-bottom,.weights,.nomination-pair,.table-scroll,.cover-layout,
+    .racing-winner-layout)),
+  .slide.active .cols>*,
+  .slide.active .roster>*,
+  .slide.active .network>*,
+  .slide.active .limits>*,
+  .slide.active .rule-bottom>*,
+  .slide.active .weights>*,
+  .slide.active .nomination-pair>*,
+  .slide.active .cover-layout>*,
+  .slide.active .racing-winner-layout>*,
+  .slide.active .list>li,
+  .slide.active .severity>div,
+  .slide.active .matrix tbody tr{
+    animation-name:rise;animation-duration:.44s;
+    animation-timing-function:cubic-bezier(.22,.61,.36,1);
+    animation-fill-mode:backwards;
+  }
+  .slide.active :nth-child(1){animation-delay:.05s}
+  .slide.active :nth-child(2){animation-delay:.13s}
+  .slide.active :nth-child(3){animation-delay:.21s}
+  .slide.active :nth-child(4){animation-delay:.29s}
+  .slide.active :nth-child(5){animation-delay:.37s}
+  .slide.active :nth-child(6){animation-delay:.45s}
+  .slide.active :nth-child(7){animation-delay:.53s}
+  .slide.active :nth-child(n+8){animation-delay:.61s}
+}
+
+/* ---------------------------------------------------------- мобильно */
+@media(max-width:800px){
+  .viewport{height:100dvh;overflow:auto}
+  .stage{position:static;width:100%!important;height:auto!important;transform:none!important}
+  .slide{width:100%;height:auto;min-height:100dvh;padding:32px 22px 90px;overflow:visible}
+  .slide:after{left:22px;right:22px;bottom:65px}
+  .draft{position:static;order:-1;margin-bottom:18px;font-size:12px}
+  .kicker{font-size:14px;margin-bottom:18px;gap:10px}
+  .kicker:before{width:25px;height:7px}
+  h1,.cover-layout h1{font-size:clamp(40px,8vw,65px)}
+  h2,.media-slide h2,.racing-winner-copy h2{font-size:34px}
+  h3{font-size:25px}
+  .lede,.cover-layout .lede{font-size:21px}
+  .cols,.cols.two,.cover-layout,.network,.roster,.architecture-grid,.weights,
+  .criteria,.bigpair,.nomination-pair,.racing-winner-layout,.limits,.rule-bottom,
+  .media-body,.steps ol{grid-template-columns:1fr;gap:28px}
+  .cover-number{display:none}
+  .col p,.list li,.network .node p{font-size:20px}
+  .list li{padding-left:36px}
+  .list li:before{width:20px}
+  .number{font-size:42px;margin-bottom:12px}
+  .takeaway{font-size:20px;padding-top:27px}
+  .bigpair .value{font-size:55px}
+  .quote{font-size:23px}
+  .roster{grid-template-columns:1fr 1fr;gap:25px}
+  .contestant .model{font-size:32px}
+  .contestant .no{font-size:21px;padding:5px 7px}
+  .limits strong{font-size:48px}
+  .media-rail{flex-direction:column;align-items:center}
+  .media-card{--fh:520px;opacity:1;width:min(260px,100%)}
+  .media-card .media-name small{display:block}
+  .frame{width:100%;height:auto;aspect-ratio:1080 / 2424}
+  .media-panel h3{font-size:28px}
+  .panel-rows>div{grid-template-columns:1fr;gap:6px}
+  .weight{font-size:64px}
+  .scale-key{flex-wrap:wrap}
+  .scale-key span{width:40%}
+  .racing-car{width:min(280px,100%)}
+  .table-scroll{overflow-x:auto}
+  .matrix{min-width:1100px}
+  .table-key{display:grid;gap:10px}
+  .pager{right:12px;bottom:12px}
+}
+
+@media print{
+  .viewport{height:auto;overflow:visible}
+  .stage{position:static;transform:none!important}
+  .slide{display:flex!important;break-after:page;page-break-after:always}
+  .slide:last-child{break-after:auto;page-break-after:auto}
+  .pager,.help{display:none!important}
+  .media-card{opacity:1!important}
+  @page{size:1600px 900px;margin:0}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Editorial content update: preserve bolder geometry and colours. */
+.evidence-note{font-size:24px;line-height:1.4;margin-top:24px}
+.video-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.frame video{z-index:1}.frame-no,.frame-play,.frame-badges{z-index:3}
+.outcome{text-align:center;padding:12px}.outcome strong{font-size:40px!important}.outcome p{font-size:22px!important;overflow-wrap:anywhere}
+.frame-badges b{font-size:22px}
+.editorial-results th,.editorial-results td{font-size:22px;padding:15px 9px}
+.editorial-results th:first-child,.editorial-results td:first-child{width:150px}
+.editorial-results th:last-child,.editorial-results td:last-child{width:230px}
+.editorial-results td{overflow-wrap:normal}
+.arch-matrix th:first-child,.arch-matrix td:first-child{width:220px}
+.arch-matrix th:last-child,.arch-matrix td:last-child{width:145px}
+@media print{.video-poster{display:block!important}.frame video{display:none!important}.frame-play{display:none!important}}
+.architecture-diagram{display:block;width:1424px;height:580px;object-fit:contain;margin-top:8px}.architecture-slide h2{margin-bottom:0}.arch-score{float:right;color:var(--accent);font-size:54px}@media(max-width:800px){.architecture-diagram{width:100%;height:auto}.arch-score{font-size:28px}}
+
+/* Edit 2: no kickers; larger totals, two strengths and two limitations. */
+.editorial-results th,.editorial-results td{font-size:30px;padding:30px 12px;line-height:1.25}
+.editorial-results th{font-size:25px}
+.editorial-results th:first-child,.editorial-results td:first-child{width:208px}
+.editorial-results th:nth-child(2),.editorial-results td:nth-child(2){width:156px}
+.editorial-results th:nth-child(3),.editorial-results td:nth-child(3){width:120px}
+.editorial-results th:nth-child(4),.editorial-results td:nth-child(4){width:232px}
+.editorial-results th:nth-child(5),.editorial-results td:nth-child(5){width:165px}
+.editorial-results th:nth-child(6),.editorial-results td:nth-child(6){width:178px}
+.editorial-results th:last-child,.editorial-results td:last-child{width:277px}
+.final-slide{padding-top:64px}.final-slide h2{font-size:63px;margin-bottom:44px;max-width:none}
+.score-context{float:right;font-size:24px;font-weight:400;color:var(--muted);padding-top:24px}
+.arch-score small{display:block;text-align:right;font-size:22px;font-weight:400;color:var(--muted);line-height:1.2}
+@media(max-width:800px){.score-context{float:none;display:block;padding-top:8px}.editorial-results th,.editorial-results td{font-size:24px;padding:20px 12px}}
+
+/* Edit 3: concise introduction, separate requirement screens, symmetric limits. */
+.limits{max-width:none;gap:70px;grid-template-columns:1fr 1fr}
+.requirement-list{gap:34px;margin-top:22px;max-width:1350px}
+.requirement-list li{font-size:34px;line-height:1.4}
+.roster{margin-top:44px}
+@media(max-width:800px){.limits{grid-template-columns:1fr}.requirement-list li{font-size:26px}}
+
+/* Edit 4: legible results and concrete nominations. */
+.editorial-results td{font-size:34px;padding:24px 12px}
+.editorial-results .total{font-size:34px}
+.editorial-results th{font-size:28px;padding:24px 10px}
+.final-slide h2{margin-bottom:28px}
+.final-slide .takeaway{font-size:28px;padding-top:22px;margin-top:auto}
+.award-grid{margin-top:54px;gap:50px}
+.award-grid article{border-top:1px solid var(--line);padding-top:30px}
+.award-grid h3{min-height:82px}
+.award-grid p,.facts-slide article p{font-size:29px;line-height:1.4;color:var(--muted);margin-top:22px}
+.awards-slide .award-winner{font-size:48px;font-weight:750;color:var(--accent);margin:32px 0 20px}
+.facts-slide .cols{margin-top:35px}
+.facts-slide .fact-head{font-size:36px;font-weight:700;color:var(--ink);min-height:110px}
+@media(max-width:800px){.award-grid h3{min-height:0}.editorial-results td{font-size:28px}.editorial-results th{font-size:24px}}
+
+/* Edit 5: category scores as participant cards. */
+.category-cap{float:right;font-size:32px;font-weight:500;color:var(--muted);padding-top:20px}
+.score-cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:22px;margin-top:28px}
+.score-card{border:1px solid var(--line);border-radius:12px;padding:25px 20px;background:rgba(255,255,255,.025)}
+.score-card h3{font-size:32px;margin:0 0 27px}
+.category-total{font-size:55px;font-weight:750;line-height:1.2;color:var(--accent);margin:0 0 30px}
+.category-total small{font-size:26px;font-weight:500;color:var(--muted)}
+.score-metric{border-top:1px solid var(--line);padding:17px 0;display:flex;flex-direction:column;gap:8px}
+.category-slide:not(.delivery-slide) .score-metric{padding:11px 0}
+.score-metric span{font-size:25px;color:var(--muted)}
+.score-metric strong{font-size:32px;font-weight:650}
+.score-metric small{font-size:24px;font-weight:400;color:var(--muted)}
+.score-raw{font-size:24px;line-height:1.35;color:var(--muted);margin:0 0 18px}
+.delivery-slide .score-card h3{margin-bottom:18px}
+.delivery-slide .category-total{margin-bottom:20px}
+@media(max-width:800px){.score-cards{grid-template-columns:1fr;gap:18px}.category-cap{float:none;display:block;padding-top:10px}.score-card h3{margin-bottom:15px}}
+
+/* Larger rules, slide 7. */
+.slide[aria-label="Правила теста"] .limits strong{font-size:88px}
+.slide[aria-label="Правила теста"] .limit-unit{font-size:40px}
+.slide[aria-label="Правила теста"] .limit-desc{font-size:29px}
+.slide[aria-label="Правила теста"] .rule-bottom h3{font-size:34px}
+.slide[aria-label="Правила теста"] .rule-bottom p{font-size:29px}
+.slide[aria-label="Правила теста"] .severity b{font-size:32px}
+.slide[aria-label="Правила теста"] .severity span{font-size:29px;line-height:1.35}
+
+/* Edit 6: larger criterion text and score cards; winner. */
+.weights .row{font-size:30px;padding:17px 0;gap:15px}
+.weights .row b{flex-shrink:0}
+.score-cards{margin-top:16px;gap:20px}
+.score-card{padding:20px 18px}
+.score-card h3{font-size:36px;margin-bottom:18px}
+.category-total{font-size:62px;margin-bottom:20px}
+.category-total small{font-size:29px}
+.score-metric{padding:10px 0;gap:3px}
+.category-slide:not(.delivery-slide) .score-metric{padding:9px 0}
+.score-metric span{font-size:29px;line-height:1.2}
+.score-metric strong{font-size:39px}
+.score-metric small{font-size:28px}
+.score-raw{font-size:28px;margin-bottom:12px}
+.testing-award-layout{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center;flex:1}
+.testing-award .award-winner{font-size:112px;margin:0 0 30px}
+.testing-award-layout p{font-size:34px;line-height:1.45;color:var(--muted)}
+.testing-award-layout .tested-phases{font-size:104px;color:var(--accent);font-weight:750;margin-bottom:30px}
+.tested-phases span{font-size:44px;font-weight:500}
+.winner-layout{display:grid;grid-template-columns:1.3fr 1fr;gap:70px;align-items:center;flex:1}
+.winner-name{font-size:132px;line-height:1;font-weight:800;color:var(--accent);margin:0 0 26px}
+.winner-config{font-size:34px;color:var(--muted);margin-bottom:34px}
+.winner-reason{font-size:32px;line-height:1.6;color:var(--ink);margin:0}
+.winner-score{border-left:1px solid var(--line);padding-left:70px;font-size:190px;font-weight:800;line-height:1;color:var(--accent)}
+.winner-score span{display:block;font-size:42px;font-weight:500;color:var(--muted);margin-top:28px}
+@media(max-width:800px){.testing-award-layout,.winner-layout{grid-template-columns:1fr;gap:25px}.winner-score{border:0;padding-left:0}.weights .row{font-size:28px}}
+.delivery-slide .score-raw:last-child{margin-bottom:0}
+
+/* Edit 7: score order and equal-score medal outlines. */
+.medal-gold{--medal:#dfbd63}
+.medal-silver{--medal:#c2cbd6}
+.medal-bronze{--medal:#cb946c}
+.score-card[class*="medal-"]{border:2px solid var(--medal);padding:19px 17px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.architecture-slide[class*="medal-"] .arch-score{border:2px solid var(--medal);border-radius:10px;padding:7px 17px;color:var(--medal);font-size:47px;line-height:1.08}
+.editorial-results{border-collapse:separate;border-spacing:0 5px}
+.editorial-results td{font-size:32px;padding:14px 12px;line-height:1.2;border-bottom:1px solid var(--line)}
+.editorial-results .total{font-size:34px}
+.editorial-results th{padding:16px 10px}
+.editorial-results .unranked{color:var(--muted)}
+.editorial-results .unranked small{display:block;font-size:22px;line-height:1.15;margin-top:5px}
+.final-slide h2{margin-bottom:16px}
+.final-slide .takeaway{padding-top:18px}
+.awards-slide .cols.two h3{font-size:40px;min-height:54px}
+.awards-slide .cols.two .award-winner{font-size:64px}
+.awards-slide .cols.two p{font-size:32px}
+
+/* Edit 8: final ranking uses a side marker, no colored row outlines. */
+.editorial-results tbody td:first-child{position:relative;padding-left:18px}
+.editorial-results tr[class*="medal-"] td:first-child::before{content:"";position:absolute;left:0;top:15px;bottom:15px;width:4px;border-radius:2px;background:var(--medal)}
+.editorial-results .total{color:var(--ink)}
+
+/* Edit 9: symmetric task text and accent rules for starting conditions. */
+.slide[aria-label="Задача"] .network .node:last-child{text-align:right}
+.slide[aria-label="Стартовые условия"] .cols{margin-top:28px;gap:48px}
+.slide[aria-label="Стартовые условия"] .col{border-top:3px solid var(--accent);padding-top:28px}
+
+/* Редакция 13: отдельная оценка функционала и подлинный кадр проверки Pi. */
+.flow-rating{display:flex;align-items:baseline;justify-content:space-between;gap:18px;border-top:1px solid var(--line);padding-top:16px}
+.flow-rating span{font-size:24px;color:var(--muted)}
+.flow-rating strong{font-size:52px;line-height:1.1;white-space:nowrap;color:var(--agent)}
+
+
+/* Редакция 15: локальные QR-коды без ссылок и цветных обводок. */
+.contact-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;margin-top:34px}
+.contact-card{display:flex;flex-direction:column;align-items:center;padding:28px 20px 32px;border:0;border-radius:20px;background:rgba(255,255,255,.025);color:var(--ink);text-align:center}
+.contact-card h3{font-size:32px;margin:0 0 22px}
+.contact-card img{width:328px;height:328px;object-fit:contain;background:#fff;border-radius:20px}
+@media(max-width:800px){.contact-grid{grid-template-columns:1fr}.contact-card img{width:240px;height:240px}}
+
+</style>
+</head>
+<body>
+<!--
+  ================================================================
+  ЧТО ПРАВИТЬ ПЕРЕД ВЫСТУПЛЕНИЕМ
+
+  1. Ролики. Положи файлы рядом с этим html:
+       media/assign-01.mp4   media/workout-01.mp4   media/result-01.mp4   ... -06
+       media/robust-token.mp4  media/robust-kill.mp4  media/robust-offline.mp4
+     Имя берётся из data-src на карточке .media-card. Если .mp4 не проиграется,
+     показано сообщение; Enter повторяет попытку. Обложка скрывает кадр до запуска.
+
+  2. Текст в левой колонке. Там же, на карточке:
+       data-route="Программы → «+» → день → упражнение"   (маршрут этой конфигурации)
+       data-obs="Клавиатура закрывает «Сохранить»"        (одно наблюдение)
+       data-status-text="CORE пройден · 2 сдачи"  data-status="pass"   (pass | fail | пусто)
+       data-rate="1.5"                                    (скорость по умолчанию)
+     Пустые поля не показываются. Имя модели и харнесс берутся из data-model
+     и data-harness — над кадрами их нет, там только номер.
+
+  3. Пропорции кадра. Сейчас .4455 — под запись эмулятора 1080x2424.
+     Снимаешь иначе — поменяй --fr в :root (9:16 → .5625, 9:18 → .5, 9:19.5 → .4615).
+
+  4. Клавиши во время доклада — нажми «?».
+
+  5. Плашки-черновики (span.draft) сняты 21.09. Стиль .draft в CSS оставлен,
+     но в разметке не используется — не возвращать.
+  ================================================================
+-->
+<noscript><p class="noscript">Для перелистывания включите JavaScript в браузере.</p></noscript>
+<main class="viewport" aria-label="Презентация"><div class="stage" id="stage">
+<section class="slide" aria-label="Агент, сделай проект. Не делай ошибок.">
+
+<div class="cover-layout">
+<div>
+
+<h1>Агент,<br>сделай проект.<br><span class="accent">Не делай ошибок.</span></h1>
+<p class="lede">Пять конфигураций предъявили приложение</p>
+</div>
+<div class="cover-number"><span>05</span><small>разных ответов<br>на одно ТЗ</small></div>
+</div>
+
+</section>
+<section class="slide" aria-label="Пять конфигураций">
+
+<h2>Пять конфигураций</h2>
+<p class="lede"><strong>Модель + харнесс = агент.</strong></p>
+
+<div class="roster">
+<article class="contestant" style="--agent:#8fb7d9"><span class="no">01</span>
+<div class="model">Antigravity</div><div class="harness">Gemini 3.8 Flash · Antigravity</div></article>
+<article class="contestant" style="--agent:#d59fc6"><span class="no">02</span>
+<div class="model">GLM</div><div class="harness">GLM-5.3 · ZCode</div></article>
+
+<article class="contestant" style="--agent:#e4c84b"><span class="no">03</span>
+<div class="model">Codex</div><div class="harness">GPT-6 Astra · Codex CLI</div></article>
+<article class="contestant" style="--agent:#b9c1c9"><span class="no">04</span>
+<div class="model">Pi</div><div class="harness">GPT-6 Astra · Pi</div></article>
+<article class="contestant" style="--agent:#c9a86a"><span class="no">05</span>
+<div class="model">Claude</div><div class="harness">Opus 5.5 · Claude Code</div></article>
+</div>
+
+<p class="takeaway">03 и 04 — одна модель, два харнесса.</p>
+</section>
+<section class="slide" aria-label="Стартовые условия">
+
+<h2>Стартовые условия</h2>
+<div class="quote">Чистые профили харнессов.<br>Без пользовательских инструкций и расширений.</div>
+<div class="cols">
+<div class="col"><h3>Одинаковая база</h3><p>ТЗ, Android starter,<br>данные, доступы<br>и бюджет работы.</p></div>
+<div class="col"><h3>Свои решения</h3><p>UI, UX и архитектуру<br>агент проектирует сам.</p></div>
+<div class="col"><h3>Свои вопросы</h3><p>Ответ получает спросивший.<br>Одинаковый вопрос —<br>одинаковый ответ.</p></div>
+</div>
+
+</section>
+<section class="slide" aria-label="Задача">
+
+<h2>Задача</h2>
+<div class="network">
+<div class="node"><div class="mini-tag">Устройство тренера</div><h3>Назначить программу</h3>
+<p>Упражнения, подходы,<br>вес и повторения.</p><div class="transfer">План → спортсмену</div></div>
+<div class="node center"><div class="mini-tag">CoachTrack</div><h3>Общие данные.<br>Разные аккаунты.</h3>
+<p>Серверная синхронизация<br>и права доступа.</p></div>
+<div class="node"><div class="mini-tag">Устройство спортсмена</div><h3>Провести тренировку</h3>
+<p>Записать факт, закончить<br>и получить обратную связь.</p><div class="transfer">Результат → тренеру</div></div>
+</div>
+<p class="takeaway">Полный круг: назначил → выполнил → увидел результат.</p>
+</section>
+<section class="slide requirements-slide" aria-label="Продуктовые требования"><h2>Продуктовые требования</h2><ul class="list requirement-list"><li>Тренер создаёт программу и назначает её спортсмену.</li><li>Спортсмен записывает подходы: вес, повторы и RPE.</li><li>План и фактический результат хранятся раздельно.</li><li>История и прогресс доступны тренеру и спортсмену.</li></ul><p class="takeaway">Назначил → выполнил → увидел результат.</p></section>
+<section class="slide requirements-slide" aria-label="Технические требования"><h2>Технические требования</h2><ul class="list requirement-list"><li>Kotlin + Jetpack Compose.</li><li>Работа через API общего готового бэкенда.</li><li>Аккаунты и права доступа: данные пользователей изолированы.</li><li>Сохранённая тренировка переживает перезапуск.</li><li>Офлайн-записи отправляются после подключения без дублей.</li></ul><p class="takeaway">Сохранность данных при сбоях и повторных запросах.</p></section>
+<section class="slide" aria-label="Правила теста">
+
+<h2>Правила теста</h2>
+
+<div class="limits">
+<div><strong>2 <span class="limit-unit">часа</span></strong><span class="limit-desc">Активной работы.<br>Ожидание лимита не в счёт</span></div>
+<div><strong>0 <span class="limit-unit">P0 и P1</span></strong><span class="limit-desc">Цель приёмки.<br>Исключения фиксируем</span></div>
+</div>
+<div class="rule-bottom">
+<div><h3>Рабочий CORE</h3>
+<p>Назначил → выполнил → получил результат<br>на другом устройстве.</p>
+<p>Оцениваю последнюю сдачу, а не рабочее дерево.</p></div>
+<div class="severity">
+<div><b>P0</b><span>Блокирует продукт, теряет данные<br>или нарушает доступ</span></div>
+<div><b>P1</b><span>Функция работает неверно,<br>основной цикл жив</span></div>
+<div><b>P2</b><span>Локальный дефект с небольшим влиянием</span></div>
+</div>
+</div>
+</section>
+<section class="slide media-slide" aria-label="Назначение программы · 1/2">
+<div class="media-body">
+<div class="media-info">
+
+<h2>Назначение программы</h2>
+<p class="media-sub">Создать день → добавить упражнение → назначить спортсмену</p>
+<div class="info-active">
+<p class="panel-no"></p>
+<p class="panel-harness"></p>
+<p class="panel-note" data-row="route"></p>
+<p class="panel-note" data-row="obs"></p>
+</div>
+<div class="panel-status"></div>
+
+</div>
+<div class="media-rail">
+<article class="media-card is-active" style="--agent:#8fb7d9"
+ data-no="01" data-model="Antigravity" data-harness="Gemini 3.8 Flash" data-src="media/assign-01.mp4"
+ data-route="План и назначение: сдача 4." data-obs="Сдача 1: P0 — поля плана не принимали ввод. В финале исправлен." data-status="" data-status-text="" data-flow-score="5" data-flow-key="assign" data-rate="1">
+<div class="frame">
+<span class="frame-no">01</span>
+<img class="video-poster" src="media/assign-01.jpg" alt="Кадр: assign, слот 01">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+<article class="media-card" style="--agent:#d59fc6"
+ data-no="02" data-model="GLM" data-harness="ZCode" data-src="media/assign-02.mp4"
+ data-route="План и назначение: сдача 2." data-obs="Назначение проходит. Оставшиеся дефекты — в синхронизации и истории." data-status="" data-status-text="" data-flow-score="5" data-flow-key="assign" data-rate="1">
+<div class="frame">
+<span class="frame-no">02</span>
+<img class="video-poster" src="media/assign-02.jpg" alt="Кадр: assign, слот 02">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+
+</div>
+</div>
+</section>
+<section class="slide media-slide" aria-label="Назначение программы · 2/2">
+<div class="media-body">
+<div class="media-info">
+
+<h2>Назначение программы</h2>
+<p class="media-sub">Создать день → добавить упражнение → назначить спортсмену</p>
+<div class="info-active">
+<p class="panel-no"></p>
+<p class="panel-harness"></p>
+<p class="panel-note" data-row="route"></p>
+<p class="panel-note" data-row="obs"></p>
+</div>
+<div class="panel-status"></div>
+
+</div>
+<div class="media-rail">
+<article class="media-card is-active" style="--agent:#e4c84b"
+ data-no="03" data-model="Codex" data-harness="Codex CLI" data-src="media/assign-04.mp4"
+ data-route="Программа и назначение за одну сдачу." data-obs="UX: в конструкторе кнопка действия уходит под клавиатуру." data-status="" data-status-text="" data-flow-score="5" data-flow-key="assign" data-rate="1">
+<div class="frame">
+<span class="frame-no">03</span>
+<img class="video-poster" src="media/assign-04.jpg" alt="Кадр: assign, слот 03">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+<article class="media-card" style="--agent:#b9c1c9"
+ data-no="04" data-model="Pi" data-harness="Pi" data-src="media/assign-05.mp4"
+ data-route="План и назначение: единственная сдача." data-obs="UX: в конструкторе нет навигационной цепочки и счётчика." data-status="" data-status-text="" data-flow-score="5" data-flow-key="assign" data-rate="1">
+<div class="frame">
+<span class="frame-no">04</span>
+<img class="video-poster" src="media/assign-05.jpg" alt="Кадр: assign, слот 04">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+<article class="media-card" style="--agent:#c9a86a"
+ data-no="05" data-model="Claude" data-harness="Claude Code" data-src="media/assign-06.mp4"
+ data-route="Назначение: исправленная сдача 2." data-obs="Сдача 1: при сбое сети назначение выглядело пустым. Исправлено." data-status="" data-status-text="" data-flow-score="5" data-flow-key="assign" data-rate="1">
+<div class="frame">
+<span class="frame-no">05</span>
+<img class="video-poster" src="media/assign-06.jpg" alt="Кадр: assign, слот 06">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section class="slide media-slide" aria-label="Выполнение тренировки · 1/2">
+<div class="media-body">
+<div class="media-info">
+
+<h2>Выполнение тренировки</h2>
+<p class="media-sub">Открыть план → записать подходы → завершить тренировку</p>
+<div class="info-active">
+<p class="panel-no"></p>
+<p class="panel-harness"></p>
+<p class="panel-note" data-row="route"></p>
+<p class="panel-note" data-row="obs"></p>
+</div>
+<div class="panel-status"></div>
+
+</div>
+<div class="media-rail">
+<article class="media-card is-active" style="--agent:#8fb7d9"
+ data-no="01" data-model="Antigravity" data-harness="Gemini 3.8 Flash" data-src="media/workout-01.mp4"
+ data-route="Записать факт → завершить тренировку." data-obs="Функции: финальная группа B принята 10/10; старые дефекты закрыты." data-status="" data-status-text="" data-flow-score="5" data-flow-key="workout" data-rate="1">
+<div class="frame">
+<span class="frame-no">01</span>
+<img class="video-poster" src="media/workout-01.jpg" alt="Кадр: workout, слот 01">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+<article class="media-card" style="--agent:#d59fc6"
+ data-no="02" data-model="GLM" data-harness="ZCode" data-src="media/workout-02.mp4"
+ data-route="Ввод повторов и веса, сохранение подхода." data-obs="P1: после отказа сервера локальный факт остаётся записанным. Отдельная проверка." data-status="" data-status-text="" data-flow-score="2" data-flow-key="workout" data-rate="1">
+<div class="frame">
+<span class="frame-no">02</span>
+<img class="video-poster" src="media/workout-02.jpg" alt="Кадр: workout, слот 02">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+
+</div>
+</div>
+</section>
+<section class="slide media-slide" aria-label="Выполнение тренировки · 2/2">
+<div class="media-body">
+<div class="media-info">
+
+<h2>Выполнение тренировки</h2>
+<p class="media-sub">Открыть план → записать подходы → завершить тренировку</p>
+<div class="info-active">
+<p class="panel-no"></p>
+<p class="panel-harness"></p>
+<p class="panel-note" data-row="route"></p>
+<p class="panel-note" data-row="obs"></p>
+</div>
+<div class="panel-status"></div>
+
+</div>
+<div class="media-rail">
+<article class="media-card is-active" style="--agent:#e4c84b"
+ data-no="03" data-model="Codex" data-harness="Codex CLI" data-src="media/workout-04.mp4"
+ data-route="Факт и RPE вводятся в панели подхода." data-obs="UX: сохранение факта доступно над клавиатурой; правила ввода видны заранее." data-status="" data-status-text="" data-flow-score="5" data-flow-key="workout" data-rate="1">
+<div class="frame">
+<span class="frame-no">03</span>
+<img class="video-poster" src="media/workout-04.jpg" alt="Кадр: workout, слот 03">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+<article class="media-card" style="--agent:#b9c1c9"
+ data-no="04" data-model="Pi" data-harness="Pi" data-src="media/workout-05.mp4"
+ data-route="Сохранённый факт отделён от плана." data-obs="По проверке: поворот экрана теряет несохранённый ввод (P2). Учтён в функциях." data-status="" data-status-text="" data-flow-score="3,5" data-flow-key="workout" data-rate="1">
+<div class="frame">
+<span class="frame-no">04</span>
+<img class="video-poster" src="media/workout-05.jpg" alt="Кадр: workout, слот 04">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+<article class="media-card" style="--agent:#c9a86a"
+ data-no="05" data-model="Claude" data-harness="Claude Code" data-src="media/workout-06.mp4"
+ data-route="Ввод фактических повторов, веса и RPE." data-obs="UX 5/5: план подставлен, сохранение доступно, следующий подход рядом." data-status="" data-status-text="" data-flow-score="5" data-flow-key="workout" data-rate="1">
+<div class="frame">
+<span class="frame-no">05</span>
+<img class="video-poster" src="media/workout-06.jpg" alt="Кадр: workout, слот 06">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section class="slide media-slide" aria-label="Результаты тренировки · 1/2">
+<div class="media-body">
+<div class="media-info">
+
+<h2>Результаты тренировки</h2>
+<p class="media-sub">Другое устройство → история → результат и прогресс</p>
+<div class="info-active">
+<p class="panel-no"></p>
+<p class="panel-harness"></p>
+<p class="panel-note" data-row="route"></p>
+<p class="panel-note" data-row="obs"></p>
+</div>
+<div class="panel-status"></div>
+
+</div>
+<div class="media-rail">
+<article class="media-card is-active" style="--agent:#8fb7d9"
+ data-no="01" data-model="Antigravity" data-harness="Gemini 3.8 Flash" data-src="media/result-01.mp4"
+ data-route="История выполненной тренировки у тренера." data-obs="UX: разницу между планом и фактом пользователь сравнивает сам." data-status="" data-status-text="" data-flow-score="5" data-flow-key="result" data-rate="1">
+<div class="frame">
+<span class="frame-no">01</span>
+<img class="video-poster" src="media/result-01.jpg" alt="Кадр: result, слот 01">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+<article class="media-card" style="--agent:#d59fc6"
+ data-no="02" data-model="GLM" data-harness="ZCode" data-src="media/result-02.mp4"
+ data-route="История и прогресс на другом устройстве." data-obs="P2: кеш молчит при неудачном обновлении. Грамматика счётчика из баллов исключена." data-status="" data-status-text="" data-flow-score="3,5" data-flow-key="result" data-rate="1">
+<div class="frame">
+<span class="frame-no">02</span>
+<img class="video-poster" src="media/result-02.jpg" alt="Кадр: result, слот 02">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+
+</div>
+</div>
+</section>
+<section class="slide media-slide" aria-label="Результаты тренировки · 2/2">
+<div class="media-body">
+<div class="media-info">
+
+<h2>Результаты тренировки</h2>
+<p class="media-sub">Другое устройство → история → результат и прогресс</p>
+<div class="info-active">
+<p class="panel-no"></p>
+<p class="panel-harness"></p>
+<p class="panel-note" data-row="route"></p>
+<p class="panel-note" data-row="obs"></p>
+</div>
+<div class="panel-status"></div>
+
+</div>
+<div class="media-rail">
+<article class="media-card is-active" style="--agent:#e4c84b"
+ data-no="03" data-model="Codex" data-harness="Codex CLI" data-src="media/result-04.mp4"
+ data-route="От завершённой тренировки к графику прогресса." data-obs="UX: показаны план, факт, разница и дельта прогресса." data-status="" data-status-text="" data-flow-score="5" data-flow-key="result" data-rate="1">
+<div class="frame">
+<span class="frame-no">03</span>
+<img class="video-poster" src="media/result-04.jpg" alt="Кадр: result, слот 03">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+<article class="media-card" style="--agent:#b9c1c9"
+ data-no="04" data-model="Pi" data-harness="Pi" data-src="media/result-05.mp4"
+ data-route="История с разницей между планом и фактом." data-obs="История и план/факт. В конце — кадр проверки графика спортсмена." data-status="" data-status-text="" data-flow-score="5" data-flow-key="result" data-rate="1">
+<div class="frame">
+<span class="frame-no">04</span>
+<img class="video-poster" src="media/result-05.jpg" alt="Кадр: result, слот 04">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+<article class="media-card" style="--agent:#c9a86a"
+ data-no="05" data-model="Claude" data-harness="Claude Code" data-src="media/result-06.mp4"
+ data-route="Результат спортсмена на устройстве тренера." data-obs="Сдача 1: график не обновлялся. Исправлено." data-status="" data-status-text="" data-flow-score="5" data-flow-key="result" data-rate="1">
+<div class="frame">
+<span class="frame-no">05</span>
+<img class="video-poster" src="media/result-06.jpg" alt="Кадр: result, слот 06">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section class="slide media-slide" aria-label="Проверки надёжности">
+<div class="media-body">
+<div class="media-info">
+
+<h2>Проверки надёжности</h2>
+<p class="media-sub">Что осталось от нашей тренировки?</p>
+<div class="info-active">
+<p class="panel-no"></p>
+<p class="panel-harness"></p>
+<p class="panel-note" data-row="route"></p>
+<p class="panel-note" data-row="obs"></p>
+</div>
+<div class="panel-status"></div>
+
+</div>
+<div class="media-rail">
+<article class="media-card is-active" style="--agent:var(--accent)"
+ data-no="A" data-model="Claude" data-harness="Claude Code · слот 05" data-src="media/robust-token.mp4"
+ data-route="Отозвана сессия" data-obs="Экран входа с объяснением «Сессия истекла»." data-status="" data-status-text="" data-rate="1">
+<div class="frame">
+<span class="frame-no">A</span>
+<img class="video-poster" src="media/robust-token.jpg" alt="Отозвана сессия: Claude">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+<article class="media-card" style="--agent:var(--accent)"
+ data-no="B" data-model="Codex" data-harness="Codex CLI · слот 03" data-src="media/robust-kill.mp4"
+ data-route="Завершён процесс" data-obs="После запуска оба сохранённых подхода на месте." data-status="" data-status-text="" data-rate="1">
+<div class="frame">
+<span class="frame-no">B</span>
+<img class="video-poster" src="media/robust-kill.jpg" alt="Завершён процесс: Codex">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+<article class="media-card" style="--agent:var(--accent)"
+ data-no="C" data-model="Pi" data-harness="Pi · слот 04" data-src="media/robust-offline.mp4"
+ data-route="Отключена сеть" data-obs="Факт сохранён локально и отправлен после подключения." data-status="" data-status-text="" data-rate="1">
+<div class="frame">
+<span class="frame-no">C</span>
+<img class="video-poster" src="media/robust-offline.jpg" alt="Отключена сеть: Pi">
+<div class="frame-badges"></div>
+<div class="frame-play"><span>&#9654;</span></div>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section class="slide " aria-label="Критерии и веса"><h2>Критерии и веса</h2><div class="weights"><div style="--group:var(--accent)"><div class="weight">55<small> / 100</small></div><h3>Бизнес</h3><div class="row">Функции и надёжность <b>35</b></div><div class="row">UX <b>10</b></div><div class="row">Визуал <b>10</b></div></div><div style="--group:var(--steel)"><div class="weight">30<small> / 100</small></div><h3>Инженерия</h3><div class="row">Архитектура <b>20</b></div><div class="row">Тестирование <b>10</b></div></div><div style="--group:var(--sand)"><div class="weight">15<small> / 100</small></div><h3>Доставка</h3><div class="row">Время до сдачи <b>10</b></div><div class="row">Кол-во сдач <b>5</b></div></div></div><p class="takeaway">Итог = Σ (оценка / 5 × вес) − штраф</p></section>
+<section class="slide category-slide" aria-label="Оценки · бизнес"><h2>Бизнес <span class="category-cap">55 баллов</span></h2><div class="score-cards"><article class="score-card"><h3>GLM</h3><p class="category-total">39,5<small> / 55</small></p><div class="score-metric"><span>Функции</span><strong>24,5<small> / 35</small></strong></div><div class="score-metric"><span>UX</span><strong>7<small> / 10</small></strong></div><div class="score-metric"><span>Визуал</span><strong>8<small> / 10</small></strong></div></article><article class="score-card medal-bronze"><h3>Antigravity</h3><p class="category-total">49<small> / 55</small></p><div class="score-metric"><span>Функции</span><strong>35<small> / 35</small></strong></div><div class="score-metric"><span>UX</span><strong>7<small> / 10</small></strong></div><div class="score-metric"><span>Визуал</span><strong>7<small> / 10</small></strong></div></article><article class="score-card medal-bronze"><h3>Pi</h3><p class="category-total">49<small> / 55</small></p><div class="score-metric"><span>Функции</span><strong>31,5<small> / 35</small></strong></div><div class="score-metric"><span>UX</span><strong>9<small> / 10</small></strong></div><div class="score-metric"><span>Визуал</span><strong>8,5<small> / 10</small></strong></div></article><article class="score-card medal-silver"><h3>Codex</h3><p class="category-total">52,5<small> / 55</small></p><div class="score-metric"><span>Функции</span><strong>35<small> / 35</small></strong></div><div class="score-metric"><span>UX</span><strong>9<small> / 10</small></strong></div><div class="score-metric"><span>Визуал</span><strong>8,5<small> / 10</small></strong></div></article><article class="score-card medal-gold"><h3>Claude</h3><p class="category-total">55<small> / 55</small></p><div class="score-metric"><span>Функции</span><strong>35<small> / 35</small></strong></div><div class="score-metric"><span>UX</span><strong>10<small> / 10</small></strong></div><div class="score-metric"><span>Визуал</span><strong>10<small> / 10</small></strong></div></article></div><p class="takeaway">Функции и надёжность · удобство · визуал</p></section>
+<section class="slide architecture-slide" aria-label="Архитектура · Antigravity"><h2>Antigravity <span class="arch-score">3,0 / 5</span></h2><img class="architecture-diagram" src="media/architecture/arch-gemini.svg" alt="Архитектура Antigravity: слои, хранение и синхронизация"><p class="takeaway">Изменяемость · тестируемость · границы · соответствие задаче</p></section>
+<section class="slide architecture-slide medal-bronze" aria-label="Архитектура · GLM"><h2>GLM <span class="arch-score">3,5 / 5</span></h2><img class="architecture-diagram" src="media/architecture/arch-glm.svg" alt="Архитектура GLM: слои, хранение и синхронизация"><p class="takeaway">Изменяемость · тестируемость · границы · соответствие задаче</p></section>
+<section class="slide architecture-slide medal-silver" aria-label="Архитектура · Codex"><h2>Codex <span class="arch-score">4,0 / 5</span></h2><img class="architecture-diagram" src="media/architecture/arch-codex.svg" alt="Архитектура Codex: слои, хранение и синхронизация"><p class="takeaway">Изменяемость · тестируемость · границы · соответствие задаче</p></section>
+<section class="slide architecture-slide medal-silver" aria-label="Архитектура · Pi"><h2>Pi <span class="arch-score">4,0 / 5</span></h2><img class="architecture-diagram" src="media/architecture/arch-pi.svg" alt="Архитектура Pi: слои, хранение и синхронизация"><p class="takeaway">Изменяемость · тестируемость · границы · соответствие задаче</p></section>
+<section class="slide architecture-slide medal-gold" aria-label="Архитектура · Claude"><h2>Claude <span class="arch-score">4,5 / 5</span></h2><img class="architecture-diagram" src="media/architecture/arch-claude.svg" alt="Архитектура Claude: слои, хранение и синхронизация"><p class="takeaway">Изменяемость · тестируемость · границы · соответствие задаче</p></section>
+<section class="slide category-slide" aria-label="Оценки · тестирование"><h2>Тестирование <span class="category-cap">10 баллов</span></h2><div class="score-cards"><article class="score-card"><h3>Antigravity</h3><p class="category-total">1,5<small> / 10</small></p><div class="score-metric"><span>Логика</span><strong>1,5<small> / 4</small></strong></div><div class="score-metric"><span>UI</span><strong>0<small> / 2</small></strong></div><div class="score-metric"><span>Сценарии</span><strong>0<small> / 4</small></strong></div></article><article class="score-card"><h3>GLM</h3><p class="category-total">2,5<small> / 10</small></p><div class="score-metric"><span>Логика</span><strong>2,5<small> / 4</small></strong></div><div class="score-metric"><span>UI</span><strong>0<small> / 2</small></strong></div><div class="score-metric"><span>Сценарии</span><strong>0<small> / 4</small></strong></div></article><article class="score-card medal-bronze"><h3>Claude</h3><p class="category-total">5<small> / 10</small></p><div class="score-metric"><span>Логика</span><strong>3,5<small> / 4</small></strong></div><div class="score-metric"><span>UI</span><strong>1,5<small> / 2</small></strong></div><div class="score-metric"><span>Сценарии</span><strong>0<small> / 4</small></strong></div></article><article class="score-card medal-silver"><h3>Codex</h3><p class="category-total">5,5<small> / 10</small></p><div class="score-metric"><span>Логика</span><strong>3,5<small> / 4</small></strong></div><div class="score-metric"><span>UI</span><strong>1<small> / 2</small></strong></div><div class="score-metric"><span>Сценарии</span><strong>1<small> / 4</small></strong></div></article><article class="score-card medal-gold"><h3>Pi</h3><p class="category-total">7,5<small> / 10</small></p><div class="score-metric"><span>Логика</span><strong>2,5<small> / 4</small></strong></div><div class="score-metric"><span>UI</span><strong>1,5<small> / 2</small></strong></div><div class="score-metric"><span>Сценарии</span><strong>3,5<small> / 4</small></strong></div></article></div><p class="takeaway">Подтверждённое покрытие рисков · тесты автора, повторённые проверяющим</p></section>
+<section class="slide category-slide delivery-slide" aria-label="Оценки · доставка"><h2>Доставка <span class="category-cap">15 баллов</span></h2><div class="score-cards"><article class="score-card"><h3>GLM</h3><p class="category-total">7<small> / 15</small></p><div class="score-metric"><span>Время<br>до сдачи</span><strong>3<small> / 10</small></strong></div><p class="score-raw">138,1 мин</p><div class="score-metric"><span>Кол-во сдач</span><strong>4<small> / 5</small></strong></div><p class="score-raw">Сдач: 2</p></article><article class="score-card"><h3>Claude</h3><p class="category-total">7<small> / 15</small></p><div class="score-metric"><span>Время<br>до сдачи</span><strong>3<small> / 10</small></strong></div><p class="score-raw">130,73 мин</p><div class="score-metric"><span>Кол-во сдач</span><strong>4<small> / 5</small></strong></div><p class="score-raw">Сдач: 2</p></article><article class="score-card medal-bronze"><h3>Antigravity</h3><p class="category-total">9<small> / 15</small></p><div class="score-metric"><span>Время<br>до сдачи</span><strong>7<small> / 10</small></strong></div><p class="score-raw">58,9 мин</p><div class="score-metric"><span>Кол-во сдач</span><strong>2<small> / 5</small></strong></div><p class="score-raw">Сдач: 4</p></article><article class="score-card medal-silver"><h3>Pi</h3><p class="category-total">11<small> / 15</small></p><div class="score-metric"><span>Время<br>до сдачи</span><strong>6<small> / 10</small></strong></div><p class="score-raw">63 мин</p><div class="score-metric"><span>Кол-во сдач</span><strong>5<small> / 5</small></strong></div><p class="score-raw">Сдач: 1</p></article><article class="score-card medal-gold"><h3>Codex</h3><p class="category-total">15<small> / 15</small></p><div class="score-metric"><span>Время<br>до сдачи</span><strong>10<small> / 10</small></strong></div><p class="score-raw">39,8 мин</p><div class="score-metric"><span>Кол-во сдач</span><strong>5<small> / 5</small></strong></div><p class="score-raw">Сдач: 1</p></article></div><p class="takeaway">До финальной зачётной сдачи · только активное время</p></section>
+<section class="slide awards-slide" aria-label="Номинации · архитектура и удобство"><h2>Номинации</h2><div class="cols two award-grid"><article><h3>Лучшая архитектура</h3><p class="award-winner">Claude</p><p>4,5 / 5</p><p>Разделённые модели,<br>хранилище и синхронизация.</p></article><article><h3>Удобство</h3><p class="award-winner">Claude</p><p>UI/UX 5 / 5</p><p>План подставлен,<br>следующий подход рядом.</p></article></div></section>
+<section class="slide awards-slide" aria-label="Номинации · скорость и тестировщик"><h2>Номинации</h2><div class="cols two award-grid"><article><h3>Самый быстрый</h3><p class="award-winner">Codex</p><p>39,8 минуты</p><p>До финальной<br>зачётной сдачи.</p></article><article><h3>Тестировщик</h3><p class="award-winner">Pi</p><p>7,5 / 10 за тестирование</p><p>Самое полное подтверждённое<br>покрытие рисков.</p></article></div></section>
+<section class="slide winner-slide" aria-label="Победитель CoachTrack"><h2>Победитель CoachTrack</h2><div class="winner-layout"><div><p class="winner-name">Codex</p><p class="winner-config">GPT-6 Astra · Codex CLI</p><p class="winner-reason">52,5 — бизнес<br>16 — архитектура<br>5,5 — тестирование<br>15 — доставка</p></div><div class="winner-score">89<span>из 100</span></div></div><p class="takeaway">Первое место по сумме баллов в этой задаче.</p></section>
+<section class="slide final-slide" aria-label="Итоги"><h2>Итоги</h2><div class="table-scroll"><table class="matrix editorial-results"><thead><tr><th>Участник</th><th>Баллы<br>/ 100</th><th>Сдачи</th><th>Найдено<br>P0 / P1 / P2</th><th>Всего<br>мин</th><th>До CORE<br>мин</th><th>Квоты, %<br>5 ч / нед.</th></tr></thead><tbody><tr class="medal-gold"><td>Codex</td><td class="total">89</td><td>1</td><td>0 / 0 / 0</td><td>39</td><td>39</td><td>123 / 20</td></tr><tr class="medal-silver"><td>Claude</td><td class="total">83</td><td>2</td><td>0 / 1 / 1</td><td>130</td><td>98</td><td>144 / 32</td></tr><tr class="medal-silver"><td>Pi</td><td class="total">83</td><td>1</td><td>0 / 0 / 1</td><td>63</td><td>63</td><td>175 / 28</td></tr><tr class="medal-bronze"><td>Antigravity</td><td class="total">71</td><td>4</td><td>2 / 1 / 7</td><td>58</td><td>36</td><td>86 / 14</td></tr><tr><td>GLM</td><td class="total">61</td><td>2</td><td>1 / 3 / 4</td><td>138</td><td>94</td><td>323 / 65</td></tr><tr class="unranked"><td>Kimi<small>Нет сдачи</small></td><td class="unscored">—</td><td>0</td><td>—</td><td>113</td><td>—</td><td>500 / 100</td></tr></tbody></table></div></section>
+<section class="slide contacts-slide" aria-label="Код и контакты">
+<h2>Код и контакты</h2>
+<div class="contact-grid">
+<div class="contact-card"><h3>Telegram</h3><img src="media/contacts/telegram.png" alt="QR: Telegram ATelbay"></div>
+<div class="contact-card"><h3>LinkedIn</h3><img src="media/contacts/linkedin.png" alt="QR: LinkedIn atelbay"></div>
+<div class="contact-card"><h3>Репозиторий</h3><img src="media/contacts/repository.png" alt="QR: репозиторий CoachTrack"></div>
+</div>
+<p class="takeaway">Спасибо за внимание. Вопросы?</p>
+</section>
+
+</div></main>
+<nav class="pager" aria-label="Перелистывание слайдов">
+<button id="prev" type="button" aria-label="Предыдущий слайд">←</button>
+<span id="count">01 / 28</span>
+<button id="next" type="button" aria-label="Следующий слайд">→</button>
+</nav>
+<div class="help" id="help" role="dialog" aria-label="Клавиши">
+<div class="help-card">
+<h3>Клавиши</h3>
+<dl>
+<dt>→ · PgDn · Space</dt><dd>вперёд: пуск записи → следующая запись → следующий слайд</dd>
+<dt>← · PgUp</dt><dd>назад по тому же пути, с перезапуском записи</dd>
+<dt>Shift + ← →</dt><dd>слайды, минуя записи</dd>
+<dt>Home / End</dt><dd>первый / последний слайд</dd>
+<dt>1 2 3</dt><dd>выбрать запись; Enter — запустить и раскрыть кадр</dd>
+<dt>Enter · клик по кадру</dt><dd>пуск / пауза</dd>
+<dt>R</dt><dd>повтор с начала</dd>
+<dt>S</dt><dd>скорость: 1 → 1,25 → 1,5 → 2 → 0,5</dd>
+<dt>Z</dt><dd>увеличение кадра: 1 → 1,6 → 2,2</dd>
+<dt>F</dt><dd>кадр на весь экран</dd>
+<dt>?</dt><dd>эта подсказка</dd>
+</dl>
+<p>Ролики берутся из папки <code>media/</code> рядом с файлом.
+Все ролики находятся локально; подключение к сети не требуется.</p>
+</div></div>
+<span class="sr-only" id="announcement" aria-live="polite"></span>
+<script>
+'use strict';
+(function(){
+const slides   = [...document.querySelectorAll('.slide')];
+const viewport = document.querySelector('.viewport');
+const stage    = document.getElementById('stage');
+const counter  = document.getElementById('count');
+const prevBtn  = document.getElementById('prev');
+const nextBtn  = document.getElementById('next');
+const help     = document.getElementById('help');
+const live     = document.getElementById('announcement');
+
+const RATES = [1, 1.25, 1.5, 2, 0.5];
+/* В песочнице предпросмотра (iframe srcdoc) replaceState запрещён.
+   Пробуем один раз, при отказе тихо выключаем: листание от этого не страдает. */
+let canWriteHash = true;
+const ZOOMS = [1, 1.6, 2.2];
+
+let index = 0;
+
+/* ------------------------------------------------------------ слайды */
+function slideFromHash(){
+  let h = '';
+  try { h = location.hash || ''; } catch(e){ return null; }
+  const m = /^#s(\d{1,2})$/.exec(h);
+  if(!m) return null;
+  const n = parseInt(m[1], 10) - 1;
+  return (n >= 0 && n < slides.length) ? n : null;
+}
+
+function writeHash(n){
+  if(!canWriteHash) return;
+  try {
+    /* replaceState, а не hash= : не засоряем историю, но F5 возвращает сюда */
+    history.replaceState(null, '', '#s' + String(n + 1).padStart(2,'0'));
+  } catch(e){
+    canWriteHash = false;   /* srcdoc или file:// с ограничениями — просто живём без адреса */
+  }
+}
+
+function go(target, keepHash){
+  leaveFullscreen();
+  index = Math.max(0, Math.min(slides.length - 1, target));
+  pauseAll();
+  slides.forEach((s, i) => {
+    const on = i === index;
+    s.classList.toggle('active', on);
+    s.setAttribute('aria-hidden', String(!on));
+    s.inert = !on;
+  });
+  counter.textContent = String(index + 1).padStart(2,'0') + ' / ' + slides.length;
+  prevBtn.disabled = index === 0;
+  nextBtn.disabled = index === slides.length - 1;
+  viewport.scrollTop = 0;
+  live.textContent = 'Слайд ' + (index + 1) + '. ' + slides[index].getAttribute('aria-label');
+  if(keepHash !== false) writeHash(index);
+  resetSlide(slides[index]);
+  const card = activeCard();
+  if(card) mountVideo(card);
+}
+
+function scale(){
+  if(innerWidth <= 800){ stage.style.transform = ''; return; }
+  const k = Math.min(innerWidth / 1600, viewport.clientHeight / 900);
+  stage.style.transform = 'translate(-50%,-50%) scale(' + k + ')';
+}
+
+/* ------------------------------------------------------------ ролики */
+function currentSlide(){ return slides[index]; }
+function cardsOf(slide){ return [...slide.querySelectorAll('.media-card')]; }
+function activeCard(){
+  const s = currentSlide();
+  return s ? s.querySelector('.media-card.is-active') : null;
+}
+
+const players = new WeakMap();
+function stateOf(card){
+  if(!players.has(card)) players.set(card, {wanted:false, request:0, loading:false, error:'', rate:parseFloat(card.dataset.rate || '1')});
+  return players.get(card);
+}
+function renderPlayer(card){
+  const frame = card.querySelector('.frame'), v = frame.querySelector('video');
+  const state = stateOf(card), notice = frame.querySelector('.frame-notice');
+  frame.classList.toggle('is-paused', !state.wanted && (!v || v.paused));
+  if(notice){
+    notice.hidden = !(state.error || state.loading);
+    notice.textContent = state.error || 'Загрузка…';
+  }
+  paintBadges(frame, v);
+}
+function pauseCard(card){
+  const state = stateOf(card);
+  state.wanted = false; state.loading = false; state.request++;
+  const v = card.querySelector('video');
+  if(v) v.pause();
+  renderPlayer(card);
+}
+function pauseAll(){ document.querySelectorAll('.media-card').forEach(pauseCard); }
+function mayPlay(card){
+  return card === activeCard() && card.closest('.slide') === currentSlide() &&
+    !document.hidden && !help.hasAttribute('open');
+}
+function playbackError(card, message){
+  pauseCard(card);
+  stateOf(card).error = message;
+  renderPlayer(card);
+}
+
+/* <video> создаётся только когда карточка стала активной:
+   иначе браузер полезет за 18 файлами сразу. */
+function mountVideo(card){
+  const frame = card.querySelector('.frame');
+  const src   = card.dataset.src;
+  if(!src || frame.querySelector('video')) return;
+  frame.dataset.mounted = '1';
+
+  const v = document.createElement('video');
+  v.src = src;
+  v.poster = src.replace(/\.mp4$/i, '.jpg');
+  v.preload = 'metadata';
+  v.playsInline = true;
+  v.muted = true;                       /* нужен для автозапуска по клику без жеста */
+  v.setAttribute('tabindex','-1');
+  v.playbackRate = stateOf(card).rate;
+
+  v.addEventListener('error', () => {
+    playbackError(card, 'Видео не открылось. Проверьте папку media. Enter — повторить.');
+  });
+  v.addEventListener('loadeddata', () => {
+    v.playbackRate = stateOf(card).rate;
+    renderPlayer(card);
+  });
+  v.addEventListener('play', () => {
+    if(!mayPlay(card) || !stateOf(card).wanted) v.pause();
+    renderPlayer(card);
+  });
+  v.addEventListener('playing', () => {
+    const state = stateOf(card);
+    if(!mayPlay(card) || !state.wanted){ v.pause(); return; }
+    state.loading = false; state.error = '';
+    card.dataset.started = '1';
+    card.classList.add('is-revealed');
+    renderPlayer(card);
+  });
+  v.addEventListener('waiting', () => {
+    if(stateOf(card).wanted) stateOf(card).loading = true;
+    renderPlayer(card);
+  });
+  v.addEventListener('pause', () => {
+    // A queued pause event from an earlier command must not cancel a newer play.
+    if(v.paused){ stateOf(card).wanted = false; stateOf(card).loading = false; }
+    renderPlayer(card);
+  });
+  v.addEventListener('ended', () => {
+    stateOf(card).wanted = false; stateOf(card).loading = false;
+    renderPlayer(card);
+  });
+
+  frame.insertBefore(v, frame.querySelector('.frame-badges'));
+  renderPlayer(card);
+}
+
+function selectCard(slide, i){
+  const cards = cardsOf(slide);
+  if(!cards.length) return;
+  i = Math.max(0, Math.min(cards.length - 1, i));
+  if(document.fullscreenElement && !cards[i].contains(document.fullscreenElement)) leaveFullscreen();
+  cards.forEach((c, n) => {
+    const on = n === i;
+    c.classList.toggle('is-active', on);
+    if(!on) pauseCard(c);
+  });
+  mountVideo(cards[i]);
+  paintPanel(slide, cards[i]);
+}
+
+function paintPanel(slide, card){
+  const info = slide.querySelector('.media-info');
+  if(!info) return;
+  const d = card.dataset;
+  info.style.setProperty('--agent', card.style.getPropertyValue('--agent') || 'var(--accent)');
+  /* имя конфигурации живёт только здесь; над кадрами остаётся один номер */
+  info.querySelector('.panel-no').textContent      = [d.no, d.model].filter(Boolean).join(' \u00b7 ');
+  info.querySelector('.panel-harness').textContent = d.harness || '';
+  ['route','obs'].forEach(k => {
+    const row = info.querySelector('[data-row="' + k + '"]');
+    const val = (d[k] || '').trim();
+    row.hidden = !val;
+    if(val) row.textContent = val;
+  });
+  const st = info.querySelector('.panel-status');
+  st.innerHTML = '';
+  if(d.flowScore){
+    const rating = document.createElement('div'); rating.className = 'flow-rating';
+    const label = document.createElement('span'); label.textContent = 'Функциональность';
+    const value = document.createElement('strong'); value.textContent = d.flowScore + ' / 5';
+    rating.append(label, value); st.appendChild(rating);
+  }
+  if(d.statusText){
+    const pill = document.createElement('span');
+    pill.className = 'pill' + (d.status ? ' ' + d.status : '');
+    pill.textContent = d.statusText;
+    st.appendChild(pill);
+  }
+}
+
+function paintBadges(frame, v){
+  const box = frame.querySelector('.frame-badges');
+  if(!box) return;
+  box.innerHTML = '';
+  const rate = v ? v.playbackRate : 1;
+  const zoom = parseFloat(frame.style.getPropertyValue('--zoom') || '1');
+  if(Math.abs(rate - 1) > 0.01){
+    const b = document.createElement('b'); b.textContent = rate + '×'; box.appendChild(b);
+  }
+  if(Math.abs(zoom - 1) > 0.01){
+    const b = document.createElement('b'); b.textContent = 'ZOOM ' + zoom + '×'; box.appendChild(b);
+  }
+}
+
+function withActiveVideo(fn){
+  const card = activeCard();
+  if(!card) return false;
+  const v = card.querySelector('video');
+  if(!v) return false;
+  fn(v, card.querySelector('.frame'), card);
+  return true;
+}
+
+function togglePlay(){
+  const card = activeCard();
+  if(!card) return false;
+  if(stateOf(card).wanted) pauseCard(card);
+  else playCard(card);
+  return true;
+}
+function restart(){
+  const card = activeCard();
+  if(!card) return false;
+  playCard(card, true);
+  return true;
+}
+function playCard(card, fromStart = false){
+  if(!mayPlay(card)) return;
+  mountVideo(card);
+  const v = card.querySelector('video'), state = stateOf(card);
+  if(!v) return;
+  if(state.wanted && !fromStart) return;
+  const request = ++state.request;
+  state.error = ''; state.wanted = true; state.loading = true;
+  if(v.error){ v.load(); }
+  if(fromStart || v.ended){ try { v.currentTime = 0; } catch(e){} }
+  v.playbackRate = state.rate;
+  renderPlayer(card);
+  v.play().catch(error => {
+    if(state.request !== request || !state.wanted || !mayPlay(card)) return;
+    if(error.name === 'AbortError'){ pauseCard(card); return; }
+    playbackError(card, 'Не удалось запустить видео. Enter — повторить.');
+  });
+}
+function cycleRate(){
+  return withActiveVideo((v, frame, card) => {
+    const i = RATES.findIndex(r => Math.abs(r - v.playbackRate) < 0.01);
+    v.playbackRate = RATES[(i + 1) % RATES.length];
+    stateOf(card).rate = v.playbackRate;
+    paintBadges(frame, v);
+  });
+}
+function cycleZoom(){
+  const card = activeCard();
+  if(!card) return false;
+  const frame = card.querySelector('.frame');
+  const cur = parseFloat(frame.style.getPropertyValue('--zoom') || '1');
+  const i = ZOOMS.findIndex(z => Math.abs(z - cur) < 0.01);
+  frame.style.setProperty('--zoom', ZOOMS[(i + 1) % ZOOMS.length]);
+  paintBadges(frame, frame.querySelector('video'));
+  return true;
+}
+function goFullscreen(){
+  const card = activeCard();
+  if(!card) return false;
+  const el = card.querySelector('.frame');
+  const action = document.fullscreenElement ? document.exitFullscreen() : el.requestFullscreen?.();
+  if(action) action.catch(() => { live.textContent = 'Полноэкранный режим недоступен. Продолжайте показ в окне.'; });
+  return true;
+}
+function leaveFullscreen(){
+  if(document.fullscreenElement) document.exitFullscreen().catch(() => {});
+}
+
+/* ------------------------------------------------------------ пульт */
+/* «Вперёд»: пуск текущей записи → следующая запись с пуском → следующий слайд.
+   «Назад» — ровно обратный путь. На слайд с записями всегда попадаем
+   с первой записью на паузе в начале. */
+function rewind(card){
+  delete card.dataset.started;
+  pauseCard(card);
+  const v = card.querySelector('video');
+  if(v){ try { v.currentTime = 0; } catch(e){} }
+}
+function startCard(card){
+  playCard(card, true);
+}
+function resetSlide(slide){
+  const cards = cardsOf(slide);
+  if(!cards.length) return;
+  cards.forEach(rewind);
+  selectCard(slide, 0);
+}
+function stepForward(){
+  const slide = currentSlide();
+  const cards = cardsOf(slide);
+  const card  = activeCard();
+  if(!card){ go(index + 1); return; }
+  const i = cards.indexOf(card);
+  if(stateOf(card).loading) return;
+  if(!card.dataset.started){ startCard(card); return; }
+  if(i < cards.length - 1){ rewind(card); selectCard(slide, i + 1); startCard(cards[i + 1]); return; }
+  go(index + 1);
+}
+function stepBack(){
+  const slide = currentSlide();
+  const cards = cardsOf(slide);
+  const card  = activeCard();
+  if(!card){ go(index - 1); return; }
+  const i = cards.indexOf(card);
+  if(i > 0){ rewind(card); selectCard(slide, i - 1); startCard(cards[i - 1]); return; }
+  if(card.dataset.started){ rewind(card); return; }
+  go(index - 1);
+}
+
+/* --------------------------------------------------------- клавиши */
+prevBtn.addEventListener('click', stepBack);
+nextBtn.addEventListener('click', stepForward);
+
+document.querySelectorAll('.media-card').forEach(card => {
+  const frame = card.querySelector('.frame');
+  const cover = document.createElement('div'); cover.className = 'frame-cover';
+  const title = document.createElement('strong'); title.textContent = card.dataset.model;
+  const hint = document.createElement('span'); hint.textContent = 'Видео';
+  cover.append(title, hint); frame.appendChild(cover);
+  const notice = document.createElement('div'); notice.className = 'frame-notice';
+  notice.setAttribute('role','status'); notice.hidden = true; frame.appendChild(notice);
+  card.addEventListener('click', () => {
+    const slide = card.closest('.slide');
+    const i = cardsOf(slide).indexOf(card);
+    if(card.classList.contains('is-active')) togglePlay();
+    else selectCard(slide, i);
+  });
+});
+
+document.addEventListener('keydown', e => {
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
+  if(e.target.closest?.('input,textarea,select,[contenteditable="true"]')) return;
+
+  const k = e.key;
+
+  if(e.repeat){ e.preventDefault(); return; }
+  if(help.hasAttribute('open')){ e.preventDefault(); help.removeAttribute('open'); return; }
+
+  if(k === '?' || k === '/'){ e.preventDefault(); pauseAll(); help.setAttribute('open',''); return; }
+  if(k === 'Escape'){ help.removeAttribute('open'); return; }
+
+  if((k === ' ' || k === 'Enter') && e.target.closest?.('button')) return;
+  if(e.shiftKey && k === 'ArrowRight'){ e.preventDefault(); go(index + 1); return; }
+  if(e.shiftKey && k === 'ArrowLeft'){ e.preventDefault(); go(index - 1); return; }
+  if(['ArrowRight','PageDown',' '].includes(k)){ e.preventDefault(); stepForward(); return; }
+  if(['ArrowLeft','PageUp'].includes(k)){ e.preventDefault(); stepBack(); return; }
+  if(k === 'Home'){ e.preventDefault(); go(0); return; }
+  if(k === 'End'){ e.preventDefault(); go(slides.length - 1); return; }
+
+  if(['1','2','3','4','5','6'].includes(k)){
+    const slide = currentSlide();
+    if(cardsOf(slide).length){ e.preventDefault(); selectCard(slide, parseInt(k,10) - 1); }
+    return;
+  }
+  if(k === 'Enter'){ if(togglePlay()) e.preventDefault(); return; }
+  const low = k.toLowerCase();
+  if(low === 'r' || low === 'к'){ if(restart())      e.preventDefault(); return; }
+  if(low === 's' || low === 'ы'){ if(cycleRate())    e.preventDefault(); return; }
+  if(low === 'z' || low === 'я'){ if(cycleZoom())    e.preventDefault(); return; }
+  if(low === 'f' || low === 'а'){ if(goFullscreen()) e.preventDefault(); return; }
+});
+
+help.addEventListener('click', () => help.removeAttribute('open'));
+document.addEventListener('visibilitychange', () => { if(document.hidden) pauseAll(); });
+addEventListener('beforeprint', pauseAll);
+addEventListener('resize', scale);
+addEventListener('hashchange', () => {
+  const n = slideFromHash();
+  if(n !== null && n !== index) go(n, false);
+});
+
+/* -------------------------------------------------------------- старт */
+slides.forEach(s => { const c = cardsOf(s); if(c.length) paintPanel(s, c[0]); });
+go(slideFromHash() ?? 0);
+scale();
+})();
+</script>
+</body>
+</html>

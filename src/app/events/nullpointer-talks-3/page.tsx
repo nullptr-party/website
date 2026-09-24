@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
 const speakers = [
-  { name: 'Виктор Гордиенко', role: 'Senior iOS Engineer, inDrive', topic: 'Агентные процессы и оркестрация в iOS-разработке', link: 'https://www.linkedin.com/in/viktor-gordienko/' },
-  { name: 'Арыстан Тельбай', role: 'Android Developer, ForteBank', topic: 'Агент, сделай проект. Не делай ошибок', link: 'https://www.linkedin.com/in/atelbay/' },
-  { name: 'Павел Королёв', role: 'Android Tech Lead, QazCode', topic: 'Я навайбкодил систему для производства квизов', link: 'https://www.linkedin.com/in/pavelkorolevxyz/' },
+  { name: 'Виктор Гордиенко', role: 'Senior iOS Engineer, inDrive', topic: 'Агентные процессы и оркестрация в iOS-разработке', link: 'https://www.linkedin.com/in/viktor-gordienko/', slides: '/events/slides/gordienko-agent-orchestration-ios.pdf' },
+  { name: 'Арыстан Тельбай', role: 'Android Developer, ForteBank', topic: 'Агент, сделай проект. Не делай ошибок', link: 'https://www.linkedin.com/in/atelbay/', slides: '/events/slides/telbay-agent-project/' },
+  { name: 'Павел Королёв', role: 'Android Tech Lead, QazCode', topic: 'Я навайбкодил систему для производства квизов', link: 'https://www.linkedin.com/in/pavelkorolevxyz/', slides: 'https://pavelkorolev.xyz/talks/2026-09-24-nullptr-talks-3/' },
 ];
 
 const partners = [
@@ -63,6 +63,9 @@ export default function Page() {
                   </div>
                 </div>
                 <h3 className="font-pixel text-[10px] sm:text-xs text-[#FFD700]/80 mb-2 leading-relaxed">{speaker.topic}</h3>
+                <a href={speaker.slides} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-pixel text-[9px] sm:text-[10px] text-[#FFD700]/80 hover:text-[#FFD700] transition-colors mt-3 uppercase tracking-wider">
+                  Презентация ↗
+                </a>
               </article>
             ))}
           </div>

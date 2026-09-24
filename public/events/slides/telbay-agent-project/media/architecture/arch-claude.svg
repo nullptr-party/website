@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1424" height="580" viewBox="0 0 1424 580" font-family="Arial, sans-serif">
+<title>Claude: архитектура финальной сдачи</title>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10Z" fill="#9298a0"/></marker></defs>
+<rect width="1424" height="580" fill="#202124"/>
+<rect x="8" y="45" width="330" height="112" rx="12" fill="#292b2f" stroke="#575b61" stroke-width="2"/><text x="28" y="88" fill="#e5e5df" font-size="28" font-weight="700">Экраны</text><text x="28" y="127" fill="#a9adb2" font-size="24">Compose</text>
+<polyline points="338,101 362,101" fill="none" stroke="#9298a0" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="365" y="45" width="330" height="112" rx="12" fill="#292b2f" stroke="#575b61" stroke-width="2"/><text x="385" y="88" fill="#e5e5df" font-size="28" font-weight="700">ViewModel</text><text x="385" y="127" fill="#a9adb2" font-size="24">Нужные зависимости</text>
+<polyline points="695,101 719,101" fill="none" stroke="#9298a0" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="722" y="45" width="330" height="112" rx="12" fill="#292b2f" stroke="#575b61" stroke-width="2"/><text x="742" y="88" fill="#e5e5df" font-size="28" font-weight="700">Repository</text><text x="742" y="127" fill="#a9adb2" font-size="24">Отдельные области</text>
+<polyline points="1052,101 1076,101" fill="none" stroke="#9298a0" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1079" y="45" width="330" height="112" rx="12" fill="#292b2f" stroke="#575b61" stroke-width="2"/><text x="1099" y="88" fill="#e5e5df" font-size="28" font-weight="700">API</text><text x="1099" y="127" fill="#a9adb2" font-size="24">DTO ↔ модели</text>
+<polyline points="887,157 887,300" fill="none" stroke="#9298a0" stroke-width="3" marker-end="url(#arrow)"/>
+<polyline points="800,157 800,230 325,230 325,300" fill="none" stroke="#9298a0" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="722" y="300" width="688" height="112" rx="12" fill="#292b2f" stroke="#e4c84b" stroke-width="2"/><text x="742" y="343" fill="#e5e5df" font-size="28" font-weight="700">DataStore</text><text x="742" y="382" fill="#a9adb2" font-size="24">Атомарное состояние</text>
+<rect x="8" y="300" width="650" height="112" rx="12" fill="#292b2f" stroke="#b9c1c9" stroke-width="2"/><text x="28" y="343" fill="#e5e5df" font-size="28" font-weight="700">SyncEngine</text><text x="28" y="382" fill="#a9adb2" font-size="24">Ревизии факта + LocalWorkout</text>
+<text x="18" y="497" fill="#a6c395" font-size="29" font-weight="700">+ Явные правила слияния</text>
+<text x="730" y="497" fill="#ec7e83" font-size="29" font-weight="700">− Сложнее проследить состояния</text>
+<polyline points="658,356 714,356" fill="none" stroke="#9298a0" stroke-width="3" marker-end="url(#arrow)"/><text x="18" y="548" fill="#a6c395" font-size="29" font-weight="700">+ Подменяемое хранилище</text><text x="730" y="548" fill="#ec7e83" font-size="29" font-weight="700">− Автоматический отказ от правки</text></svg>
