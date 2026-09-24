@@ -6,7 +6,7 @@ const speakers = [
     role: 'Senior Android Engineer, inDrive',
     topic: 'Код-ревью: как перестать мучить команду',
     description: 'Максимально холиварная тема, о которую разбили ЧСВ многих разрабов и которую боятся не меньше бизнесов.',
-    slides: '/events/slides/mikhalchenkov-code-review.pdf',
+    slides: '/events/slides/view/mikhalchenkov-code-review/',
     video: 'https://youtu.be/ArS-_FquUNg',
   },
   {
@@ -14,7 +14,7 @@ const speakers = [
     role: 'Android Engineer, ДНЧВПСТиО',
     topic: 'Почему в 2026 нужно уходить из энтерпрайза и нырять в ИИ',
     description: 'Хайп? Выгорание? Расчётливый эпатаж для повышения продаж своих курсов? Приходите, узнаем вместе.',
-    slides: '/events/slides/orekhov-enterprise-to-ai.pdf',
+    slides: '/events/slides/view/orekhov-enterprise-to-ai/',
     video: 'https://youtu.be/l5D4-7AdyJY',
   },
   {
@@ -22,7 +22,7 @@ const speakers = [
     role: 'Android/KMP-разработчик, QIC digital hub (Катар)',
     topic: 'Compose Multiplatform — пет-проект который приносит денюжки',
     description: 'Как использовать Kotlin не только для Android, но и для iOS и веба. Советы, антипримеры, подводные камни.',
-    slides: '/events/slides/kassen-compose-multiplatform.pdf',
+    slides: '/events/slides/view/kassen-compose-multiplatform/',
     video: 'https://youtu.be/leD-VVZhU8c',
   },
   {

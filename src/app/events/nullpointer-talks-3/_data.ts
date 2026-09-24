@@ -1,7 +1,7 @@
 import type { TalksEvent, TalksPartner } from '@/app/events/_components/TalksEventPage';
 
 const speakers = [
-  { name: 'Виктор Гордиенко', role: 'Senior iOS Engineer, inDrive', topic: 'Агентные процессы и оркестрация в iOS-разработке', profile: 'https://www.linkedin.com/in/viktor-gordienko/', slides: '/events/slides/gordienko-agent-orchestration-ios.pdf' },
+  { name: 'Виктор Гордиенко', role: 'Senior iOS Engineer, inDrive', topic: 'Агентные процессы и оркестрация в iOS-разработке', profile: 'https://www.linkedin.com/in/viktor-gordienko/', slides: '/events/slides/view/gordienko-agent-orchestration-ios/' },
   { name: 'Арыстан Тельбай', role: 'Android Developer, ForteBank', topic: 'Агент, сделай проект. Не делай ошибок', profile: 'https://www.linkedin.com/in/atelbay/', slides: '/events/slides/telbay-agent-project/' },
   { name: 'Павел Королёв', role: 'Android Tech Lead, QazCode', topic: 'Я навайбкодил систему для производства квизов', profile: 'https://www.linkedin.com/in/pavelkorolevxyz/', slides: 'https://pavelkorolev.xyz/talks/2026-09-24-nullptr-talks-3/' },
 ];

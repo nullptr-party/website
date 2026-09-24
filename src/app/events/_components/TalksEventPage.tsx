@@ -78,7 +78,7 @@ function SpeakerCard({ speaker, index }: { speaker: TalksSpeaker; index: number 
       <h4 className="font-pixel text-[10px] sm:text-xs text-[#FFD700]/80 mb-2 leading-relaxed">{speaker.topic}</h4>
       {speaker.description && <p className="font-body text-xs sm:text-sm text-[#999] leading-relaxed">{speaker.description}</p>}
       {speaker.slides && (
-        <a href={speaker.slides} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-pixel text-[9px] sm:text-[10px] text-[#FFD700]/80 hover:text-[#FFD700] transition-colors mt-3 uppercase tracking-wider">
+        <a href={speaker.slides} target={speaker.slides.startsWith('/') ? undefined : '_blank'} rel={speaker.slides.startsWith('/') ? undefined : 'noopener noreferrer'} className="inline-flex min-h-11 items-center gap-1.5 border border-[#FFD700]/30 px-3 font-pixel text-[9px] sm:text-[10px] text-[#FFD700]/80 hover:text-[#FFD700] hover:border-[#FFD700] transition-colors mt-3 uppercase tracking-wider">
           <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8" /><path d="M12 17v4" /><polygon points="10,8 10,14 15,11" fill="currentColor" stroke="none" />
           </svg>

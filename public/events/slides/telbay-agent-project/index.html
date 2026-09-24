@@ -418,9 +418,9 @@ kbd{font:inherit;border:1px solid var(--line);border-radius:5px;padding:1px 6px;
 
 /* ---------------------------------------------------------- мобильно */
 @media(max-width:800px){
-  .viewport{height:100dvh;overflow:auto}
+  .viewport{height:auto;overflow:visible}
   .stage{position:static;width:100%!important;height:auto!important;transform:none!important}
-  .slide{width:100%;height:auto;min-height:100dvh;padding:32px 22px 90px;overflow:visible}
+  .slide{width:100%;height:auto;min-height:0;padding:32px 22px 90px;overflow:visible}
   .slide:after{left:22px;right:22px;bottom:65px}
   .draft{position:static;order:-1;margin-bottom:18px;font-size:12px}
   .kicker{font-size:14px;margin-bottom:18px;gap:10px}
@@ -457,7 +457,8 @@ kbd{font:inherit;border:1px solid var(--line);border-radius:5px;padding:1px 6px;
   .table-scroll{overflow-x:auto}
   .matrix{min-width:1100px}
   .table-key{display:grid;gap:10px}
-  .pager{right:12px;bottom:12px}
+  .pager{right:12px;bottom:calc(12px + env(safe-area-inset-bottom));opacity:1}
+  .pager button{width:44px;height:44px}
 }
 
 @media print{
@@ -1147,6 +1148,7 @@ function go(target, keepHash){
   prevBtn.disabled = index === 0;
   nextBtn.disabled = index === slides.length - 1;
   viewport.scrollTop = 0;
+  if(matchMedia('(max-width:800px)').matches) window.scrollTo(0,0);
   live.textContent = 'Слайд ' + (index + 1) + '. ' + slides[index].getAttribute('aria-label');
   if(keepHash !== false) writeHash(index);
   resetSlide(slides[index]);
@@ -1425,8 +1427,14 @@ function stepBack(){
 }
 
 /* --------------------------------------------------------- клавиши */
-prevBtn.addEventListener('click', stepBack);
-nextBtn.addEventListener('click', stepForward);
+prevBtn.addEventListener('click', () => {
+  if(matchMedia('(max-width:800px)').matches) go(index - 1);
+  else stepBack();
+});
+nextBtn.addEventListener('click', () => {
+  if(matchMedia('(max-width:800px)').matches) go(index + 1);
+  else stepForward();
+});
 
 document.querySelectorAll('.media-card').forEach(card => {
   const frame = card.querySelector('.frame');
