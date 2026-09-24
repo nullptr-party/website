@@ -45,13 +45,7 @@ function SlideBackground() {
 }
 
 function MostLogo() {
-  return (
-    <img
-      src="/present/most-logo.png"
-      alt="MOST IT Hub"
-      className="absolute bottom-8 right-8 w-52 h-52 opacity-80"
-    />
-  );
+  return <img src="/present/most-logo.png" alt="MOST IT Hub" className="absolute bottom-8 right-8 hidden w-52 h-52 opacity-80 lg:block" />;
 }
 
 function WhiteQR({ value, className }: { value: string; className?: string }) {
@@ -68,32 +62,24 @@ function WhiteQR({ value, className }: { value: string; className?: string }) {
   );
 }
 
-const QR_CLASS = 'w-[50vh] h-[50vh]';
+const QR_CLASS = 'w-[min(40vw,20vh)] h-[min(40vw,20vh)] lg:w-[50vh] lg:h-[50vh]';
 
 function SlideWifi({ showMostLogo }: { showMostLogo: boolean }) {
   return (
     <div className="relative w-full h-full bg-[#2e2e2e] flex items-center justify-center">
       <SlideBackground />
       {showMostLogo && <MostLogo />}
-
-      <div className="relative z-10 flex items-start justify-center gap-[8vw] w-full px-[6vw]">
-        {/* WiFi */}
-        <div className="flex flex-col items-center gap-[2vh]">
-          <h2 className="font-[var(--font-press-start)] text-white text-[4vh]">WiFi</h2>
-          <div className={QR_CLASS}>
-            <WhiteQR value="WIFI:T:WPA;S:Most IT Hub;P:123most123;;" />
-          </div>
-          <p className="font-[var(--font-press-start)] text-white text-[4.5vh]">Most IT Hub</p>
-          <p className="font-[var(--font-press-start)] text-white/80 text-[3.5vh]">123most123</p>
+      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-[4vh] lg:gap-[8vw] w-full px-4 lg:px-[6vw]">
+        <div className="flex flex-col items-center gap-[1vh] lg:gap-[2vh]">
+          <h2 className="font-[var(--font-press-start)] text-white text-base lg:text-[4vh]">WiFi</h2>
+          <div className={QR_CLASS}><WhiteQR value="WIFI:T:WPA;S:Most IT Hub;P:123most123;;" /></div>
+          <p className="font-[var(--font-press-start)] text-white text-xs lg:text-[4.5vh]">Most IT Hub</p>
+          <p className="font-[var(--font-press-start)] text-white/80 text-xs lg:text-[3.5vh]">123most123</p>
         </div>
-
-        {/* Telegram */}
-        <div className="flex flex-col items-center gap-[2vh]">
-          <h2 className="font-[var(--font-press-start)] text-white text-[4vh] invisible">_</h2>
-          <div className={QR_CLASS}>
-            <WhiteQR value="https://t.me/+60NkAf4EsJ8xYWJi" />
-          </div>
-          <p className="font-[var(--font-press-start)] text-white text-[4.5vh]">Мы в Telegram</p>
+        <div className="flex flex-col items-center gap-[1vh] lg:gap-[2vh]">
+          <h2 className="font-[var(--font-press-start)] text-white text-base lg:text-[4vh] invisible">_</h2>
+          <div className={QR_CLASS}><WhiteQR value="https://t.me/+60NkAf4EsJ8xYWJi" /></div>
+          <p className="font-[var(--font-press-start)] text-white text-xs lg:text-[4.5vh]">Мы в Telegram</p>
         </div>
       </div>
     </div>
@@ -103,16 +89,14 @@ function SlideWifi({ showMostLogo }: { showMostLogo: boolean }) {
 function PartnerCard({ partner }: { partner: Partner }) {
   return (
     <div className="flex flex-col items-center gap-[0.5vh]">
-      <div className="w-[20vh] h-[20vh] overflow-hidden rounded-md bg-[#3a3a3a] border border-[#4a4a4a] flex items-center justify-center p-2">
+      <div className="w-[min(21vw,11vh)] h-[min(21vw,11vh)] lg:w-[20vh] lg:h-[20vh] overflow-hidden rounded-md bg-[#3a3a3a] border border-[#4a4a4a] flex items-center justify-center p-2">
         {partner.logo ? (
           <img src={partner.logo} alt={partner.name} className="object-contain w-full h-full" />
         ) : (
           <span className="text-white text-center font-[var(--font-press-start)] text-[1.8vh] leading-relaxed">{partner.name}</span>
         )}
       </div>
-      <span className="font-[var(--font-press-start)] text-[1.4vh] text-center text-white/80 leading-tight max-w-[18vh]">
-        {partner.name}
-      </span>
+      <span className="font-[var(--font-press-start)] text-[clamp(8px,2vw,11px)] lg:text-[1.4vh] text-center text-white/80 leading-tight max-w-[21vw] lg:max-w-[18vh]">{partner.name}</span>
     </div>
   );
 }
@@ -125,33 +109,24 @@ function SlidePartners({ partners: slidePartners, eventIndex }: { partners: Part
     <div className="relative w-full h-full bg-[#2e2e2e]">
       <SlideBackground />
       {eventIndex === 2 && <MostLogo />}
-
       <div className="relative z-10 w-full h-full flex flex-col">
-        {/* Title */}
-        <h2 className="mt-[7vh] font-[var(--font-press-start)] text-yellow-400 text-[5vh] text-center">
-          Информационные партнёры
-        </h2>
-
-        <div className="flex-1 flex items-center justify-center gap-[4vw] -mt-[8vh]">
-          {/* Left column */}
-          <div className="grid grid-cols-2 gap-[2vh]">
-            {left.map((p) => (
-              <PartnerCard key={p.name} partner={p} />
-            ))}
+        <h2 className="mt-6 px-3 font-[var(--font-press-start)] text-yellow-400 text-[clamp(10px,2.8vw,16px)] lg:mt-[7vh] lg:text-[5vh] text-center">Информационные партнёры</h2>
+        <div className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-[4vw] lg:-mt-[8vh] px-3 pb-16 lg:p-0">
+          <div className="hidden lg:grid grid-cols-2 gap-[2vh]">
+            {left.map((partner) => <PartnerCard key={partner.name} partner={partner} />)}
           </div>
-
-          {/* Central QR */}
-          <div className="w-[45vh] h-[45vh]">
+          <div className="order-first w-[min(32vw,14vh)] h-[min(32vw,14vh)] lg:order-none lg:w-[45vh] lg:h-[45vh]">
             <WhiteQR value={`https://nullptr.party/events/nullpointer-talks-${eventIndex}`} />
           </div>
-
-          {/* Right column */}
-          <div className="grid grid-cols-2 gap-[2vh]">
-            {right.map((p, i) => (
-              <div key={p.name} className={eventIndex === 3 && i === right.length - 1 && right.length % 2 === 1 ? 'col-start-2' : undefined}>
-                <PartnerCard partner={p} />
+          <div className="hidden lg:grid grid-cols-2 gap-[2vh]">
+            {right.map((partner, index) => (
+              <div key={partner.name} className={eventIndex === 3 && index === right.length - 1 && right.length % 2 === 1 ? 'col-start-2' : undefined}>
+                <PartnerCard partner={partner} />
               </div>
             ))}
+          </div>
+          <div className="grid grid-cols-3 gap-2 lg:hidden">
+            {slidePartners.map((partner) => <PartnerCard key={partner.name} partner={partner} />)}
           </div>
         </div>
       </div>
@@ -164,22 +139,15 @@ function SlideClosing({ feedbackUrl = 'https://forms.gle/pFS4uaErfrKuJW6D8', sho
     <div className="relative w-full h-full bg-[#2e2e2e] flex items-center justify-center">
       <SlideBackground />
       {showMostLogo && <MostLogo />}
-
-      <div className="relative z-10 flex items-start justify-center gap-[8vw] w-full px-[6vw]">
-        {/* Telegram */}
-        <div className="flex flex-col items-center gap-[2vh]">
-          <div className={QR_CLASS}>
-            <WhiteQR value="https://t.me/+60NkAf4EsJ8xYWJi" />
-          </div>
-          <p className="font-[var(--font-press-start)] text-white text-[4.5vh]">Мы в Telegram</p>
+      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-[4vh] lg:gap-[8vw] w-full px-4 lg:px-[6vw]">
+        <div className="flex flex-col items-center gap-[1vh] lg:gap-[2vh]">
+          <div className={QR_CLASS}><WhiteQR value="https://t.me/+60NkAf4EsJ8xYWJi" /></div>
+          <p className="font-[var(--font-press-start)] text-white text-xs lg:text-[4.5vh]">Мы в Telegram</p>
         </div>
-
         {feedbackUrl && (
-          <div className="flex flex-col items-center gap-[2vh]">
-            <div className={QR_CLASS}>
-              <WhiteQR value={feedbackUrl} />
-            </div>
-            <p className="font-[var(--font-press-start)] text-white text-[4.5vh]">Обратная связь</p>
+          <div className="flex flex-col items-center gap-[1vh] lg:gap-[2vh]">
+            <div className={QR_CLASS}><WhiteQR value={feedbackUrl} /></div>
+            <p className="font-[var(--font-press-start)] text-white text-xs lg:text-[4.5vh]">Обратная связь</p>
           </div>
         )}
       </div>
@@ -234,8 +202,13 @@ export function Presentation({ partners: slidePartners, eventIndex, feedbackUrl 
     : <SlideClosing feedbackUrl={feedbackUrl} showMostLogo={eventIndex === 2} />;
 
   return (
-    <div className="w-screen h-screen overflow-hidden cursor-none select-none">
+    <div className="relative w-screen h-dvh overflow-hidden cursor-auto lg:cursor-none select-none">
       {Slide}
+      <nav aria-label="Навигация по слайдам" className="absolute inset-x-0 bottom-0 z-20 flex items-center justify-between bg-[#232323]/95 px-5 py-3 text-white lg:hidden">
+        <button type="button" aria-label="Предыдущий слайд" disabled={current === 0} onClick={() => goTo(current - 1)} className="min-w-12 text-2xl disabled:opacity-30">←</button>
+        <span className="font-[var(--font-press-start)] text-xs">{current + 1} / {slideIds.length}</span>
+        <button type="button" aria-label="Следующий слайд" disabled={current === slideIds.length - 1} onClick={() => goTo(current + 1)} className="min-w-12 text-2xl disabled:opacity-30">→</button>
+      </nav>
     </div>
   );
 }
