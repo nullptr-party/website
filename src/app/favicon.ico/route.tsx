@@ -42,7 +42,7 @@ export async function GET() {
   const images = await Promise.all(sizes.map(renderPng));
   const ico = packIco(images, sizes);
 
-  return new Response(ico, {
+  return new Response(new Uint8Array(ico), {
     headers: { 'Content-Type': 'image/x-icon' },
   });
 }

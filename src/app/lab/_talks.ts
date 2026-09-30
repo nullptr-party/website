@@ -15,6 +15,7 @@ const galleries: Record<number, [string, string]> = {
   0: ['talks-0', 'IMG_7763.jpg'],
   1: ['talks-1', 'it-001.jpg'],
   2: ['talks-2', 'DSCF4954.jpg'],
+  3: ['talks-3', 'it-080.jpg'],
 };
 
 export async function talksPhotos(n: number): Promise<GalleryPhoto[]> {
