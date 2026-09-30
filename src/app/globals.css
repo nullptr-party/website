@@ -38,3 +38,6 @@
   opacity: 1 !important;
   transform: translateY(0) !important;
 }
+
+/* Design lab: headings inherit the page face unless marked font-pixel */
+:where(.lab) h1, :where(.lab) h2, :where(.lab) h3, :where(.lab) h4 { font-family: inherit; }
