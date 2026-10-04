@@ -9,7 +9,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        pixel: ['"Press Start 2P"', 'monospace'],
+        pixel: ['var(--font-press-start)', 'monospace'],
         body: ['Inter', 'var(--font-inter)', 'system-ui', 'sans-serif'],
       },
       colors: {
@@ -27,9 +27,12 @@ export default {
       },
     },
     transitionTimingFunction: {
+      DEFAULT: 'cubic-bezier(0.2, 0, 0, 1)',
       'md-decelerate': 'cubic-bezier(0.2, 0, 0, 1)',
     },
     transitionDuration: {
+      DEFAULT: '150ms',
+      '200': '200ms',
       'snap': '100ms',
     },
   },

@@ -1,4 +1,5 @@
 // app/layout.tsx
+import type { Metadata } from 'next';
 import { Press_Start_2P, Inter } from 'next/font/google';
 import './globals.css';
 
@@ -13,13 +14,19 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
+export const metadata: Metadata = {
+  metadataBase: new URL('https://nullptr.party'),
+  title: { default: 'nullptr.party — сообщество разработчиков Алматы', template: '%s — nullptr.party' },
+  description: 'Сообщество разработчиков Алматы: встречи, доклады, записи и презентации nullptr.talks.',
+};
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="ru">
       <body className={`${pressStart2P.variable} ${inter.variable}`}>{children}</body>
     </html>
   );

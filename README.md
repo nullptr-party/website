@@ -34,3 +34,11 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Site presentation
+
+The homepage keeps the graphite/yellow pixel identity, with readable Inter metadata and a two-column mobile / four-column desktop talks navigation. Timeline content is server-rendered and remains visible without JavaScript.
+
+Event titles and completion/recording actions appear before the gallery. Gallery height is bounded on mobile and remains 480px on larger screens. Community rules link back to the homepage.
+
+Global styles provide visible keyboard focus and honor reduced-motion preferences. Root metadata uses `https://nullptr.party` for social-image URLs; event, rules, and PDF-viewer routes supply page titles.

@@ -7,7 +7,6 @@ import 'photoswipe/style.css';
 import type { GalleryPhoto } from '@/app/_lib/gallery';
 import type PhotoSwipe from 'photoswipe';
 
-const HERO_HEIGHT = 480;
 const THUMB_HEIGHT = 60;
 const SWIPE_MIN_DISTANCE = 45;
 const SWIPE_AXIS_RATIO = 1.25;
@@ -73,6 +72,10 @@ export function PhotoGallery({ photos }: { photos: GalleryPhoto[] }) {
         imageClickAction: 'close',
         tapAction: 'close',
         bgClickAction: 'close',
+        closeTitle: 'Закрыть',
+        zoomTitle: 'Масштаб',
+        arrowPrevTitle: 'Предыдущее фото',
+        arrowNextTitle: 'Следующее фото',
       }}
     >
       <GalleryInner photos={photos} />
@@ -260,7 +263,7 @@ function GalleryInner({ photos }: { photos: GalleryPhoto[] }) {
 
   return (
     <>
-      {/* Big active photo — fixed height, aspect-ratio preserved */}
+      {/* Big active photo — bounded mobile height, aspect-ratio preserved */}
       <button
         ref={heroRef}
         onClick={handleHeroClick}
@@ -268,9 +271,9 @@ function GalleryInner({ photos }: { photos: GalleryPhoto[] }) {
         onPointerMove={handleHeroPointerMove}
         onPointerUp={handleHeroPointerUp}
         onPointerCancel={handleHeroPointerCancel}
-        className="relative block w-full bg-[#1e1e1e] rounded-sm border border-[#FFD700]/20 overflow-hidden cursor-zoom-in"
-        style={{ height: HERO_HEIGHT, touchAction: 'pan-y' }}
-        aria-label="Open fullscreen"
+        className="relative block h-[clamp(200px,66vw,360px)] sm:h-[480px] w-full bg-[#1e1e1e] rounded-sm border border-[#FFD700]/20 overflow-hidden cursor-zoom-in"
+        style={{ touchAction: 'pan-y' }}
+        aria-label={`Открыть фото ${activeIndex + 1} из ${photos.length} на весь экран`}
       >
         {[
           { photo: previousPhoto, position: -1 },
@@ -319,7 +322,8 @@ function GalleryInner({ photos }: { photos: GalleryPhoto[] }) {
                       : 'border-transparent opacity-50 hover:opacity-100 hover:border-[#FFD700]/40'
                   }`}
                   style={{ width: w, height: THUMB_HEIGHT }}
-                  aria-label={`Photo ${i + 1}`}
+                  aria-label={`Показать фото ${i + 1} из ${photos.length}`}
+                  aria-pressed={i === activeIndex}
                 >
                   <img
                     src={p.smallThumb ?? p.thumb}

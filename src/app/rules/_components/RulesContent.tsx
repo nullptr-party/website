@@ -23,6 +23,15 @@ const PixelRulesContent = ({ content, currentLang }: RulesContentProps) => {
       />
 
       <div className="max-w-4xl mx-auto relative z-10">
+        <nav className="mb-6">
+          <Link
+            href="/"
+            aria-label={currentLang === 'ru' ? 'На главную nullptr.party' : 'Back to nullptr.party home'}
+            className="inline-flex min-h-11 items-center font-[var(--font-press-start)] text-xs leading-relaxed text-yellow-400 hover:text-white transition-colors"
+          >
+            &larr; nullptr.party
+          </Link>
+        </nav>
         {/* Header Section */}
         <div className="flex justify-between items-center mb-12">
           {/* Offline Badge */}

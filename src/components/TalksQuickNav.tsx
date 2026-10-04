@@ -19,37 +19,38 @@ export function TalksQuickNav() {
   if (talks.length === 0) return null;
 
   return (
-    <div className="w-full max-w-2xl mx-auto mb-8 sm:mb-12">
+    <nav aria-label="События nullptr.talks" className="relative z-10 w-full max-w-2xl mx-auto mb-8 sm:mb-12">
       <div className="flex items-center justify-center gap-2 mb-4 sm:mb-5">
         <span className="h-px bg-[#FFD700]/20 flex-1 max-w-[60px]" />
-        <span className="font-pixel text-[9px] sm:text-[10px] text-[#666] uppercase tracking-[0.3em]">
+        <span className="font-pixel text-xs text-[#aaa] uppercase tracking-wide">
           nullptr.talks
         </span>
         <span className="h-px bg-[#FFD700]/20 flex-1 max-w-[60px]" />
       </div>
 
-      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
         {talks.map((talk) => {
           const d = formatDate(talk.date);
           return (
             <Link
               key={talk.id}
               href={talk.eventPage!}
-              className="group relative flex flex-col items-center justify-center p-3 sm:p-4 bg-[#2a2a2a] border border-[#363636] hover:border-[#FFD700] hover:bg-[#303030] transition-all duration-200 rounded-sm"
+              className="group relative flex flex-col items-center justify-center p-3 sm:p-4 bg-[#2a2a2a] border border-[#363636] hover:border-[#FFD700] hover:bg-[#303030] transition-colors duration-200 motion-reduce:transition-none rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFD700]"
             >
-              <div className="font-pixel text-xl sm:text-2xl text-white group-hover:text-[#FFD700] transition-colors leading-none mb-1.5 sm:mb-2">
+              <span className="font-body text-xs text-[#bbb] mb-2">nullptr.talks</span>
+              <div className="font-pixel text-xl sm:text-2xl text-white group-hover:text-[#FFD700] leading-none mb-1.5 sm:mb-2">
                 <span className="text-[#FFD700]/70 group-hover:text-[#FFD700]">[</span>
                 {talk.talksIndex}
                 <span className="text-[#FFD700]/70 group-hover:text-[#FFD700]">]</span>
               </div>
-              <div className="font-pixel text-[8px] sm:text-[9px] text-[#888] group-hover:text-white/90 uppercase tracking-wider transition-colors text-center leading-relaxed">
+              <div className="font-body text-xs text-[#bbb] group-hover:text-white text-center leading-relaxed tabular-nums">
                 {d.day} {d.month}
-                <div className="text-[#555] group-hover:text-[#888] mt-0.5">{d.year}</div>
+                <div className="text-[#aaa] group-hover:text-[#ccc] mt-0.5">{d.year}</div>
               </div>
             </Link>
           );
         })}
       </div>
-    </div>
+    </nav>
   );
 }

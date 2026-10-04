@@ -7,6 +7,12 @@ export function generateStaticParams() {
   return Object.keys(decks).map(deck => ({ deck }));
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ deck: string }> }) {
+  const { deck } = await params;
+  if (!(deck in decks)) notFound();
+  return { title: decks[deck as DeckId].title };
+}
+
 export default async function Page({ params }: { params: Promise<{ deck: string }> }) {
   const { deck } = await params;
   if (!(deck in decks)) notFound();
