@@ -43,4 +43,5 @@ export const imageDimensions: Record<string, { w: number; h: number }> = {
   '/events/talks-0.jpg': { w: 1200, h: 1200 },
   '/events/talks-1.jpg': { w: 1200, h: 1200 },
   '/events/talks-2.jpg': { w: 1200, h: 1200 },
+  '/events/meetup-55.jpg': { w: 1280, h: 960 },
 };
