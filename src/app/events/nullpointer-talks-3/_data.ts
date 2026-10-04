@@ -21,7 +21,7 @@ const speakers = [
   },
   {
     name: 'Павел Королёв',
-    role: 'Android Tech Lead, QazCode',
+    role: 'Android Tech Lead, AI Adoption Lead, QazCode',
     topic: 'Я навайбкодил систему для производства квизов',
     description: 'Как пет-проект для создания пакетов SIGame вырос в редактор квизов и YouTube-канал. Разбираем, как агенты помогали строить редактор, базу данных и экспорт.',
     profile: 'https://www.linkedin.com/in/pavelkorolevxyz/',

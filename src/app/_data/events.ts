@@ -60,7 +60,7 @@ export const events: CommunityEvent[] = [
     speakers: [
       { name: 'Виктор Гордиенко', role: 'Senior iOS Engineer, inDrive', topic: 'Агентные процессы и оркестрация в iOS-разработке' },
       { name: 'Арыстан Тельбай', role: 'Android Developer, ForteBank', topic: 'Агент, сделай проект. Не делай ошибок' },
-      { name: 'Павел Королёв', role: 'Android Tech Lead, QazCode', topic: 'Я навайбкодил систему для производства квизов' },
+      { name: 'Павел Королёв', role: 'Android Tech Lead, AI Adoption Lead, QazCode', topic: 'Я навайбкодил систему для производства квизов' },
     ],
   },
   {
