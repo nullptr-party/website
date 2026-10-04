@@ -77,19 +77,23 @@ function SpeakerCard({ speaker, index }: { speaker: TalksSpeaker; index: number 
       </div>
       <h4 className="font-pixel text-[10px] sm:text-xs text-[#FFD700]/80 mb-2 leading-relaxed">{speaker.topic}</h4>
       {speaker.description && <p className="font-body text-xs sm:text-sm text-[#999] leading-relaxed">{speaker.description}</p>}
-      {speaker.slides && (
-        <a href={speaker.slides} target={speaker.slides.startsWith('/') ? undefined : '_blank'} rel={speaker.slides.startsWith('/') ? undefined : 'noopener noreferrer'} className="inline-flex min-h-11 items-center gap-1.5 border border-[#FFD700]/30 px-3 font-pixel text-[9px] sm:text-[10px] text-[#FFD700]/80 hover:text-[#FFD700] hover:border-[#FFD700] transition-colors mt-3 uppercase tracking-wider">
-          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8" /><path d="M12 17v4" /><polygon points="10,8 10,14 15,11" fill="currentColor" stroke="none" />
-          </svg>
-          Презентация
-        </a>
-      )}
-      {speaker.video && (
-        <a href={speaker.video} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center gap-2 font-pixel text-[9px] sm:text-[10px] text-[#FFD700] bg-[#FFD700]/10 border border-[#FFD700]/30 hover:bg-[#FFD700]/20 transition-colors mt-3 ${speaker.slides ? 'ml-3' : ''} px-3 py-1.5 uppercase tracking-wider`}>
-          <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.376-.505a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>
-          Смотреть запись
-        </a>
+      {(speaker.slides || speaker.video) && (
+        <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          {speaker.slides && (
+            <a href={speaker.slides} target={speaker.slides.startsWith('/') ? undefined : '_blank'} rel={speaker.slides.startsWith('/') ? undefined : 'noopener noreferrer'} className="inline-flex h-11 w-full items-center justify-center gap-2 whitespace-nowrap border border-[#FFD700]/30 px-3 font-pixel text-[9px] sm:w-52 sm:text-[10px] text-[#FFD700]/80 hover:text-[#FFD700] hover:border-[#FFD700] transition-colors uppercase tracking-wider">
+              <svg className="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8" /><path d="M12 17v4" /><polygon points="10,8 10,14 15,11" fill="currentColor" stroke="none" />
+              </svg>
+              Презентация
+            </a>
+          )}
+          {speaker.video && (
+            <a href={speaker.video} target="_blank" rel="noopener noreferrer" className="inline-flex h-11 w-full items-center justify-center gap-2 whitespace-nowrap border border-[#FFD700]/30 bg-[#FFD700]/10 px-3 font-pixel text-[9px] sm:w-52 sm:text-[10px] text-[#FFD700] hover:bg-[#FFD700]/20 transition-colors uppercase tracking-wider">
+              <svg className="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.376-.505a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>
+              Смотреть запись
+            </a>
+          )}
+        </div>
       )}
     </article>
   );

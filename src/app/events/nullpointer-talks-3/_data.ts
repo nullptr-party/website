@@ -1,9 +1,33 @@
 import type { TalksEvent, TalksPartner } from '@/app/events/_components/TalksEventPage';
 
 const speakers = [
-  { name: 'Виктор Гордиенко', role: 'Senior iOS Engineer, inDrive', topic: 'Агентные процессы и оркестрация в iOS-разработке', profile: 'https://www.linkedin.com/in/viktor-gordienko/', slides: '/events/slides/view/gordienko-agent-orchestration-ios/', video: 'https://youtu.be/mrr9OTFbQ58' },
-  { name: 'Арыстан Тельбай', role: 'Android Developer, ForteBank', topic: 'Агент, сделай проект. Не делай ошибок', profile: 'https://www.linkedin.com/in/atelbay/', slides: '/events/slides/telbay-agent-project/', video: 'https://youtu.be/Z4lBenX2GTU' },
-  { name: 'Павел Королёв', role: 'Android Tech Lead, QazCode', topic: 'Я навайбкодил систему для производства квизов', profile: 'https://www.linkedin.com/in/pavelkorolevxyz/', slides: 'https://pavelkorolev.xyz/talks/2026-09-24-nullptr-talks-3/', video: 'https://youtu.be/mC4r_HApvB4' },
+  {
+    name: 'Виктор Гордиенко',
+    role: 'Senior iOS Engineer, inDrive',
+    topic: 'Агентные процессы и оркестрация в iOS-разработке',
+    description: 'Как построить проверяемый цикл работы AI-агентов в iOS-проекте: сократить шум сборки, наладить тесты и разделить задачи скриптов и модели.',
+    profile: 'https://www.linkedin.com/in/viktor-gordienko/',
+    slides: '/events/slides/view/gordienko-agent-orchestration-ios/',
+    video: 'https://youtu.be/mrr9OTFbQ58',
+  },
+  {
+    name: 'Арыстан Тельбай',
+    role: 'Android Developer, ForteBank',
+    topic: 'Агент, сделай проект. Не делай ошибок',
+    description: 'Пять связок моделей и инструментов получили одно ТЗ на Android-приложение для тренировок. Сравниваем результаты по функциям, архитектуре, тестам и времени разработки.',
+    profile: 'https://www.linkedin.com/in/atelbay/',
+    slides: '/events/slides/telbay-agent-project/',
+    video: 'https://youtu.be/Z4lBenX2GTU',
+  },
+  {
+    name: 'Павел Королёв',
+    role: 'Android Tech Lead, QazCode',
+    topic: 'Я навайбкодил систему для производства квизов',
+    description: 'Как пет-проект для создания пакетов SIGame вырос в редактор квизов и YouTube-канал. Разбираем, как агенты помогали строить редактор, базу данных и экспорт.',
+    profile: 'https://www.linkedin.com/in/pavelkorolevxyz/',
+    slides: 'https://pavelkorolev.xyz/talks/2026-09-24-nullptr-talks-3/',
+    video: 'https://youtu.be/mC4r_HApvB4',
+  },
 ];
 
 const partners: TalksPartner[] = [
